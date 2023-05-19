@@ -1,0 +1,13 @@
+.element{
+    width: 20%;
+    max-width: 100px;
+    aspect-ratio: 1/1;
+    margin: 20px;
+}
+.file{
+    background-color: lightblue;
+
+}
+.folder{
+    background-color: slateblue;
+}
