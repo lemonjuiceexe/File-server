@@ -43,13 +43,4 @@ body{
 .filelist{
     grid-column: 2 / 3;
     grid-row: 2 / 3;
-    display: flex;
-    flex-flow: row wrap;
-    justify-content: space-between;
-    align-items: center;
-    overflow-y: scroll;
-}
-.filelist::after{
-    content: "";
-    flex: auto;
 }

@@ -1,5 +1,5 @@
 <aside class="sidebar">
-    <button>New folder</button>
+    <button onclick="newFolderHandler()">New folder</button>
     <button>New file</button>
     <div>
         <label for="upload">Upload</label>
@@ -7,6 +7,20 @@
     </div>
 </aside>
 
-<!--<script>-->
-<!--    alert('sidebar.js');-->
-<!--</script>-->
+<script>
+    function newFolderHandler(){
+        const folderName = prompt("New folder in {{currentPath}}", "New folder");
+        if (folderName != null) {
+            // setCurrentPath(folderName);
+			fetch('/createFolder', {
+				method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    folderName: folderName
+                })
+            });
+        }
+    }
+</script>
