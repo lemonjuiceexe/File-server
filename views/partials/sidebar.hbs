@@ -1,19 +1,29 @@
 <aside class="sidebar">
-    <button onclick="newFolderHandler()">New folder</button>
+    <button onclick="openNewFolderHandler()">New folder</button>
     <button>New file</button>
     <div>
         <label for="upload">Upload</label>
         <input id="upload" type="file" multiple>
     </div>
-    <dialog id="newFolderDialog">pozdro</dialog>
+    <dialog id="newFolderDialog">
+        <label for="folderNameInput">
+            <h3>Pora na nazwanie naszego nowego folderu w {{currentPath}}!</h3>
+        </label>
+        <input type="text" id="folderNameInput">
+        <button onclick="newFolderSubmitHandler()">Create</button>
+        <button onclick="cancelNewFolderHandler()">Cancel</button>
+    </dialog>
 </aside>
 
 <script>
-    function newFolderHandler(){
-		console.log('a');
-		const dialog = document.querySelector("#newFolderDialog");
-		// dialog.showModal();
-        const folderName = prompt("New folder in {{currentPath}}", "New folder");
+    function cancelNewFolderHandler(){
+        document.querySelector("#newFolderDialog").close();
+    }
+	function openNewFolderHandler(){
+		document.querySelector("#newFolderDialog").showModal();
+    }
+    function newFolderSubmitHandler(){
+        const folderName = document.querySelector("#folderNameInput").value;
         if (folderName != null) {
 			console.log('fetch');
 			console.log(folderName);
