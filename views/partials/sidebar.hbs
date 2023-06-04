@@ -5,22 +5,45 @@
         <label for="upload">Upload</label>
         <input id="upload" type="file" multiple>
     </div>
+    <dialog id="newFolderDialog">pozdro</dialog>
 </aside>
 
 <script>
     function newFolderHandler(){
+		console.log('a');
+		const dialog = document.querySelector("#newFolderDialog");
+		// dialog.showModal();
         const folderName = prompt("New folder in {{currentPath}}", "New folder");
         if (folderName != null) {
-            // setCurrentPath(folderName);
-			fetch('/createFolder', {
-				method: 'POST',
+			console.log('fetch');
+			console.log(folderName);
+			fetch("/createFolder", {
+				method: "POST",
                 headers: {
-                    'Content-Type': 'application/json'
+                    "Content-Type": "application/json"
                 },
+                keepalive: true,
                 body: JSON.stringify({
-                    folderName: folderName
+					folderName: folderName
+				})
+            })
+                .then(response => {
+                    if(response.redirected){
+                        window.location.href = response.url;
+                    }
+                    else{
+                        return response.json();
+                    }
                 })
-            });
+                .catch(error => console.log(error));
         }
     }
 </script>
+<style>
+    dialog{
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+    }
+</style>

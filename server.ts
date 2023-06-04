@@ -1,11 +1,12 @@
 // ----Imports----
 // Libraries
 import express, { Express, Request, Response, Router} from 'express';
-import path from 'path';
 import { create } from 'express-handlebars';
+import path from 'path';
+// import bodyParser from 'body-parser';
 // Custom
-import main from './routes/main';
-import createFolder from './routes/createFolder';
+import mainRouter from './routes/main';
+import createRouter from './routes/create';
 
 // ----Variables----
 const app: Express = express();
@@ -24,10 +25,12 @@ app.engine('hbs', create({
 app.set('view engine', 'hbs');
 app.set('views', './views');
 app.use(express.static('public'));
-app.use(express.urlencoded({extended: true}));
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
 // ----Routes----
-app.use('/', main);
-app.use('/createFolder', createFolder);
+app.use('/', mainRouter);
+app.use('/', createRouter);
 
 // ----Server----
 app.listen(PORT, () => {
