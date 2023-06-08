@@ -4,14 +4,9 @@ import * as filesystemPromises from "fs/promises";
 import path from "path";
 
 import { IFiles } from "../types";
-import { UPLOAD_DIR, currentPath, setCurrentPath } from "../server";
+import { UPLOAD_DIR, currentPath, setCurrentPath, RESPONSE_CODES } from "../server";
 
 const router: Router = express.Router();
-const RESPONSE_CODES = {
-	OK: 0,
-	ALREADY_EXISTS: 1,
-	ERROR: 2
-};
 
 // Folder path relative to the upload directory
 async function createFolder(folderPath: string) {
@@ -46,6 +41,9 @@ router.post("/createFolder", async (req: Request, res: Response): Promise<void> 
 	res.redirect("/");
 });
 router.post("/createFile", async (req: Request, res: Response): Promise<void> => {
-	console.log("a");
+	const fileName: string = req.body.fileName;
+	const filePath: string = path.join(currentPath, fileName);
+	const responseCode: number = await createFile(filePath);
+	res.redirect("/");
 });
 export default router;

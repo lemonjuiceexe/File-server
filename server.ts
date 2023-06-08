@@ -13,6 +13,11 @@ const app: Express = express();
 const PORT: number = 3000;
 export const UPLOAD_DIR: string = path.join(__dirname, "../", "upload");
 export let currentPath: string = "/superfolder";
+export const RESPONSE_CODES = {
+	OK: 0,
+	ALREADY_EXISTS: 1,
+	ERROR: 2
+};
 
 export function setCurrentPath(value: string): void {
 	currentPath = value;

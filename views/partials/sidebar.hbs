@@ -1,52 +1,74 @@
 <aside class="sidebar">
-    <button onclick="openNewFolderHandler()">New folder</button>
-    <button>New file</button>
+    <button onclick="openDialogHandler('folder')">New folder</button>
+    <button onclick="openDialogHandler('file')">New file</button>
     <div>
         <label for="upload">Upload</label>
         <input id="upload" type="file" multiple>
     </div>
-    <dialog id="newFolderDialog">
-        <label for="folderNameInput" class="dialog-title">
+    <dialog id="create-dialog">
+        <label for="dialog-name-input" class="dialog-title">
             Pora na nazwanie naszego nowego folderu w {{currentPath}}!
         </label>
-        <input type="text" id="folderNameInput">
-        <button onclick="newFolderSubmitHandler()">Create</button>
-        <button onclick="cancelNewFolderHandler()">Cancel</button>
+        <input type="text" id="dialog-name-input">
+        <button onclick="submitDialogHandler()" id="submit-dialog">Create</button>
+        <button onclick="cancelDialogHandler()">Cancel</button>
     </dialog>
 </aside>
 
 <script>
-    function cancelNewFolderHandler() {
+    // Opens a dialog and changes its content depending on type - folder or file
+	function openDialogHandler(type){
+		if(!["folder", "file"].includes(type)){
+            throw new Error("Invalid argument in openDialogHandler function.");
+        }
+		// Change dialog text wheter creating folder or file
+		const dialogTitle = document.querySelector(".dialog-title");
+		dialogTitle.innerText = `Create new ${type} in {{currentPath}}`;
+
+		// Change submit button handler to create folder or file
+		const submitButton = document.querySelector("#submit-dialog");
+		const submitFolder = () => submitDialogHandler("folder");
+		const submitFile = () => submitDialogHandler("file");
+		submitButton.onclick = type === "folder" ? submitFolder : submitFile;
+
+        // Show dialog
+		document.querySelector("#create-dialog").showModal();
+    }
+    function cancelDialogHandler() {
         document.querySelector("#newFolderDialog").close();
     }
 
-    function openNewFolderHandler() {
-        document.querySelector("#newFolderDialog").showModal();
-    }
+	// Fetch to a proper endpoint to create folder or file
+    function submitDialogHandler(type) {
+        if (!["folder", "file"].includes(type)) {
+            throw new Error("Invalid argument in submitDialogHandler function.");
+        }
+        const nameToCreate = document.querySelector("#dialog-name-input").value;
+		const url = type === "folder" ? "/createFolder" : "/createFile";
+		const body = type === "folder" ?
+                { folderName: nameToCreate } :
+                { fileName: nameToCreate };
 
-    function newFolderSubmitHandler() {
-        const folderName = document.querySelector("#folderNameInput").value;
-        if (folderName != null) {
-            fetch("/createFolder", {
+        if (nameToCreate != null) {
+            fetch(url, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
                 },
                 keepalive: true,
-                body: JSON.stringify({
-                    folderName: folderName
-                })
+                body: JSON.stringify(body)
             })
-                    .then(response => {
-                        if (response.redirected) {
-                            window.location.href = response.url;
-                        } else {
-                            return response.json();
-                        }
-                    })
-                    .catch(error => console.log(error));
+                .then(response => {
+                    if (response.redirected) {
+                        window.location.href = response.url;
+                    } else {
+                        return response.json();
+                    }
+                })
+                .catch(error => console.log(error));
         }
     }
+
 </script>
 <style>
     dialog {
