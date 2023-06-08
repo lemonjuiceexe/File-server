@@ -34,14 +34,13 @@ async function getFiles(folder: string): Promise<IFiles> {
 
 router.get("/", (req: Request, res: Response): void => {
 	getFiles(currentPath).then((result: IFiles): void => {
-		const responseCode: number = req.query.responseCode ? parseInt(req.query.responseCode as string) : 200;
+		const responseCode: number = req.query.responseCode ? parseFloat(req.query.responseCode as string) : 200;
 		res.render("root.hbs", {
 			files: result.files,
 			folders: result.folders,
 			currentPath: currentPath,
 			currentPathFormatted: currentPath.split("/").filter(el => el.length),
-			errorResourceExists: responseCode === 409,
-			errorInternal: responseCode === 500
+			statusCode: responseCode === 200 ? undefined : responseCode
 		});
 	});
 });

@@ -2,14 +2,9 @@
 {{>sidebar}}
 {{>filelist}}
 
-{{#if errorResourceExists}}
-    <script defer>
-        alert("Resource already exists!");
-    </script>
-{{/if}}
-{{#if errorInternal}}
-    <script defer>
-        alert("Something went wrong :(");
+{{#if statusCode}}
+    <script>
+        alert("{{statusCodeMessage statusCode}}");
     </script>
 {{/if}}
 

@@ -4,15 +4,54 @@
         {{#each folders}}
             <div class="element folder">
                 {{this}}
+                <button
+                    onclick="deleteResource('{{this}}', 'folder')"
+                >
+                    (X)
+                </button>
             </div>
         {{/each}}
         {{#each files}}
             <div class="element file">
                 {{this}}
+                <button
+                    onclick="deleteResource('{{this}}', 'file')"
+                >
+                    (X)
+                </button>
             </div>
         {{/each}}
     </div>
 </div>
+
+<script>
+    // ----Deleting ----
+    function deleteResource(name, type){
+        if(!["folder", "file"].includes(type)){
+            throw new Error("Invalid argument in deleteResource function.");
+        }
+        const body = {
+            resourceName: name,
+            resourceType: type
+        };
+        fetch("/deleteResource", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            keepalive: true,
+            body: JSON.stringify(body)
+        })
+            .then(response => {
+                if (response.redirected) {
+                    window.location.href = response.url;
+                } else {
+                    return response.json();
+                }
+            })
+            .catch(error => console.log(error));
+    }
+</script>
 
 <style>
     .elements {

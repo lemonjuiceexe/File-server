@@ -15,8 +15,9 @@ export const UPLOAD_DIR: string = path.join(__dirname, "../", "upload");
 export let currentPath: string = "/superfolder";
 export const RESPONSE_CODES = {
 	OK: 200,
-	ALREADY_EXISTS: 409,
 	NOT_FOUND: 404,
+	ALREADY_EXISTS: 409.1,
+	NOT_EMPTY: 409.2,
 	ERROR: 500
 };
 
@@ -32,7 +33,20 @@ app.engine(
 		partialsDir: "views/partials",
 		defaultLayout: "main",
 		extname: ".hbs",
-		helpers: {}
+		helpers: {
+			statusCodeMessage: (statusCode: number): string => {
+				switch (statusCode) {
+					case RESPONSE_CODES.NOT_FOUND:
+						return "Resource not found";
+					case RESPONSE_CODES.ALREADY_EXISTS:
+						return "Resource already exists";
+					case RESPONSE_CODES.NOT_EMPTY:
+						return "Folder is not empty";
+					default:
+						return "Internal server error occured";
+				}
+			}
+		}
 	}).engine
 );
 app.set("view engine", "hbs");

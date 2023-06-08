@@ -20,70 +20,100 @@ function resourceExists(resourcePath: string): Promise<boolean> {
 async function createFolder(folderPath: string) {
 	const folderExists: boolean = await resourceExists(folderPath);
 	if (!folderExists) {
-		let errorOccured = false;
+		let errorCode: number = 0;
 		await filesystemPromises
 			.mkdir(path.join(UPLOAD_DIR, folderPath))
 			.then(() => console.log("🔨 Created folder: " + folderPath))
-			.catch(() => {
-				errorOccured = true;
+			.catch(error => {
+				console.log("⛔ Failed to create folder: " + folderPath);
+				console.log("Reason: " + error);
+				errorCode = RESPONSE_CODES.ERROR;
 			});
-		if (errorOccured) return RESPONSE_CODES.ERROR;
+		if (errorCode) return errorCode;
 	}
-	return new Promise<number>(resolve => resolve(folderExists ? RESPONSE_CODES.ALREADY_EXISTS : RESPONSE_CODES.OK));
+	return folderExists ? RESPONSE_CODES.ALREADY_EXISTS : RESPONSE_CODES.OK;
 }
 // File path relative to the upload directory
 async function createFile(filePath: string): Promise<number> {
 	// Check if file already exists
 	const fileExists: boolean = await resourceExists(filePath);
 	if (!fileExists) {
-		console.log("File " + filePath + " does not exist");
-		let errorOccured = false;
+		let errorCode: number = 0;
 		await filesystemPromises
 			.appendFile(path.join(UPLOAD_DIR, filePath), "")
 			.then(() => console.log("🔨 Created file: " + filePath))
-			.catch(() => {
-				errorOccured = true;
+			.catch(error => {
+				console.log("⛔ Failed to create file: " + filePath);
+				console.log("Reason: " + error);
+				errorCode = RESPONSE_CODES.ERROR;
 			});
-		if (errorOccured) return RESPONSE_CODES.ERROR;
+		if (errorCode) return errorCode;
 	}
-	return new Promise<number>(resolve => resolve(fileExists ? RESPONSE_CODES.ALREADY_EXISTS : RESPONSE_CODES.OK));
+	return fileExists ? RESPONSE_CODES.ALREADY_EXISTS : RESPONSE_CODES.OK;
 }
 
 async function deleteFolder(folderPath: string): Promise<number> {
 	const folderExists: boolean = await resourceExists(folderPath);
 	if (folderExists) {
-		let errorOccured = false;
+		let errorCode: number = 0;
 		await filesystemPromises
 			.rmdir(path.join(UPLOAD_DIR, folderPath))
 			.then(() => console.log("🗑️ Deleted folder: " + folderPath))
-			.catch(() => {
-				errorOccured = true;
+			.catch(error => {
+				switch (error.code) {
+					case "ENOTEMPTY":
+						console.log("⛔ Failed to delete folder: " + folderPath);
+						console.log("Reason: Folder is not empty");
+						errorCode = RESPONSE_CODES.NOT_EMPTY;
+						break;
+					default:
+						console.log("⛔ Failed to delete folder: " + folderPath);
+						console.log("Reason: " + error);
+						errorCode = RESPONSE_CODES.ERROR;
+						break;
+				}
 			});
-		if (errorOccured) return RESPONSE_CODES.ERROR;
+		if (errorCode) return errorCode;
 	}
-	return new Promise<number>(resolve => resolve(folderExists ? RESPONSE_CODES.OK : RESPONSE_CODES.NOT_FOUND));
+	return folderExists ? RESPONSE_CODES.OK : RESPONSE_CODES.NOT_FOUND;
 }
 async function deleteFile(filePath: string): Promise<number> {
 	const fileExists: boolean = await resourceExists(filePath);
 	if (fileExists) {
-		let errorOccured = false;
+		let errorCode: number = 0;
 		await filesystemPromises
 			.unlink(path.join(UPLOAD_DIR, filePath))
 			.then(() => console.log("🗑️ Deleted file: " + filePath))
-			.catch(() => {
-				errorOccured = true;
+			.catch(error => {
+				console.log("⛔ Failed to delete file: " + filePath);
+				console.log("Reason: " + error);
+				errorCode = RESPONSE_CODES.ERROR;
 			});
-		if (errorOccured) return RESPONSE_CODES.ERROR;
+		if (errorCode) return errorCode;
 	}
-	return new Promise<number>(resolve => resolve(fileExists ? RESPONSE_CODES.OK : RESPONSE_CODES.NOT_FOUND));
+	return fileExists ? RESPONSE_CODES.OK : RESPONSE_CODES.NOT_FOUND;
 }
+
 // ----Routes----
 router.post("/createResource", async (req: Request, res: Response): Promise<void> => {
 	const resourceType: string = req.body.resourceType;
-	const resourceName: string = req.body.resourceName;
-	const resourcePath: string = path.join(currentPath, resourceName);
+	const resourcePath: string = path.join(currentPath, req.body.resourceName);
 	const responseCode: number =
 		resourceType === "folder" ? await createFolder(resourcePath) : await createFile(resourcePath);
+
+	if (responseCode === RESPONSE_CODES.OK) {
+		res.redirect("/");
+		return;
+	}
+	res.redirect(`/?responseCode=${responseCode}`);
+});
+router.post("/deleteResource", async (req: Request, res: Response): Promise<void> => {
+	const resourceType: string = req.body.resourceType;
+	const resourcePath: string = path.join(currentPath, req.body.resourceName);
+	const responseCode: number =
+		resourceType === "folder" ? await deleteFolder(resourcePath) : await deleteFile(resourcePath);
+
+	console.log("Deleting. Code: " + responseCode);
 
 	if (responseCode === RESPONSE_CODES.OK) {
 		res.redirect("/");
