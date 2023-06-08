@@ -16,6 +16,7 @@
 </aside>
 
 <script>
+    // ----Creating a resource----
     // Opens a dialog and changes its content depending on type - folder or file
 	function openDialogHandler(type){
 		if(!["folder", "file"].includes(type)){
@@ -27,15 +28,18 @@
 
 		// Change submit button handler to create folder or file
 		const submitButton = document.querySelector("#submit-dialog");
-		const submitFolder = () => submitDialogHandler("folder");
-		const submitFile = () => submitDialogHandler("file");
-		submitButton.onclick = type === "folder" ? submitFolder : submitFile;
+		submitButton.onclick = () => submitDialogHandler(type);
 
-        // Show dialog
+		// Bind escape to cancel and enter to submit
+        window.addEventListener("keydown", e => dialogKeyBinds(e, type));
+
 		document.querySelector("#create-dialog").showModal();
     }
     function cancelDialogHandler() {
-        document.querySelector("#newFolderDialog").close();
+		// Unbind escape and enter
+        window.removeEventListener("keydown", dialogKeyBinds);
+
+        document.querySelector("#create-dialog").close();
     }
 
 	// Fetch to a proper endpoint to create folder or file
@@ -60,21 +64,6 @@
             })
                 .then(response => {
 					console.log(response.status);
-					switch(response.status){
-						case 200:
-							break;
-                        case 409:
-							alert(type === "folder" ?
-                                "Folder already exists!" :
-                                "File already exists!");
-							break;
-                        case 500:
-							alert("Something went wrong :(");
-							break;
-                        default:
-							console.log(response.status);
-							break;
-                    }
                     if (response.redirected) {
                         window.location.href = response.url;
                     } else {
@@ -85,6 +74,13 @@
         }
     }
 
+	function dialogKeyBinds(event, type) {
+        if (event.key === "Escape") {
+            cancelDialogHandler();
+        } else if (event.key === "Enter") {
+            submitDialogHandler(type);
+        }
+    }
 </script>
 
 <style>
