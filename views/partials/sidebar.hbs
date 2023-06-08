@@ -6,8 +6,8 @@
         <input id="upload" type="file" multiple>
     </div>
     <dialog id="newFolderDialog">
-        <label for="folderNameInput">
-            <h3>Pora na nazwanie naszego nowego folderu w {{currentPath}}!</h3>
+        <label for="folderNameInput" class="dialog-title">
+            Pora na nazwanie naszego nowego folderu w {{currentPath}}!
         </label>
         <input type="text" id="folderNameInput">
         <button onclick="newFolderSubmitHandler()">Create</button>
@@ -55,5 +55,10 @@
         left: 50%;
         top: 50%;
         transform: translate(-50%, -50%);
+        padding: 20px;
+    }
+    .dialog-title{
+        display: block;
+        margin: 10px 0;
     }
 </style>

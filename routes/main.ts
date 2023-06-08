@@ -11,7 +11,6 @@ const router: Router = express.Router();
 
 // Folder is a path relative to the upload directory
 async function getFiles(folder: string): Promise<IFiles> {
-	console.log('getting files');
 	let fullPath = path.join(UPLOAD_DIR, folder);
 	// const fullPath = path.join(__dirname, "../..", UPLOAD_DIR + "/" + folder);
 	let files: string[] = [], folders: string[] = [];
@@ -26,8 +25,6 @@ async function getFiles(folder: string): Promise<IFiles> {
 				.isDirectory() ? folders.push(el) : files.push(el);
 		});
 
-	console.log("FOUND FOLDERS: " + folders);
-
 	return new Promise<IFiles>(resolve =>
 		resolve(
 			{
@@ -38,9 +35,7 @@ async function getFiles(folder: string): Promise<IFiles> {
 }
 
 router.get('/', (req: Request, res: Response): void => {
-	console.log('root get');
 	getFiles(currentPath).then((result: IFiles): void => {
-		console.log('rendering root');
 		res.render('root.hbs', {
 			files: result.files,
 			folders: result.folders,
