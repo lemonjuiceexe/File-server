@@ -5,9 +5,10 @@
             <div class="element folder">
                 {{this}}
                 <button
-                    onclick="deleteResource('{{this}}', 'folder')"
+                        class="element-delete-button"
+                        onclick="deleteResource('{{this}}', 'folder')"
                 >
-                    (X)
+                    X
                 </button>
             </div>
         {{/each}}
@@ -15,9 +16,10 @@
             <div class="element file">
                 {{this}}
                 <button
-                    onclick="deleteResource('{{this}}', 'file')"
+                        class="element-delete-button"
+                        onclick="deleteResource('{{this}}', 'file')"
                 >
-                    (X)
+                    X
                 </button>
             </div>
         {{/each}}
@@ -26,8 +28,8 @@
 
 <script>
     // ----Deleting ----
-    function deleteResource(name, type){
-        if(!["folder", "file"].includes(type)){
+    function deleteResource(name, type) {
+        if (!["folder", "file"].includes(type)) {
             throw new Error("Invalid argument in deleteResource function.");
         }
         const body = {
@@ -42,14 +44,14 @@
             keepalive: true,
             body: JSON.stringify(body)
         })
-            .then(response => {
-                if (response.redirected) {
-                    window.location.href = response.url;
-                } else {
-                    return response.json();
-                }
-            })
-            .catch(error => console.log(error));
+                .then(response => {
+                    if (response.redirected) {
+                        window.location.href = response.url;
+                    } else {
+                        return response.json();
+                    }
+                })
+                .catch(error => console.log(error));
     }
 </script>
 
@@ -61,30 +63,38 @@
         align-items: center;
         overflow-y: scroll;
     }
-
     .elements::after {
         content: "";
         flex: auto;
     }
 
     .element {
+        position: relative;
         width: 20%;
         max-width: 100px;
         aspect-ratio: 1/1;
         margin: 20px;
+        padding-top: 1.7em;
+    }
+    .element-delete-button {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 1.7em;
+        height: 1.7em;
+        margin: 5px;
+        border-radius: 50%;
+        background-color: red;
+        color: white;
+        font-weight: bold;
+        border: none;
+        cursor: pointer;
     }
 
     .file {
         background-color: lightblue;
-
     }
-
     .folder {
         background-color: slateblue;
-    }
-
-    .pathBarWrapper {
-        display: block;
-        margin: 10px;
     }
 </style>

@@ -113,8 +113,6 @@ router.post("/deleteResource", async (req: Request, res: Response): Promise<void
 	const responseCode: number =
 		resourceType === "folder" ? await deleteFolder(resourcePath) : await deleteFile(resourcePath);
 
-	console.log("Deleting. Code: " + responseCode);
-
 	if (responseCode === RESPONSE_CODES.OK) {
 		res.redirect("/");
 		return;
