@@ -59,6 +59,22 @@
                 body: JSON.stringify(body)
             })
                 .then(response => {
+					console.log(response.status);
+					switch(response.status){
+						case 200:
+							break;
+                        case 409:
+							alert(type === "folder" ?
+                                "Folder already exists!" :
+                                "File already exists!");
+							break;
+                        case 500:
+							alert("Something went wrong :(");
+							break;
+                        default:
+							console.log(response.status);
+							break;
+                    }
                     if (response.redirected) {
                         window.location.href = response.url;
                     } else {

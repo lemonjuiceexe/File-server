@@ -6,7 +6,7 @@ import path from "path";
 // import bodyParser from 'body-parser';
 // Custom
 import mainRouter from "./routes/main";
-import createRouter from "./routes/create";
+import createRouter from "./routes/create_delete";
 
 // ----Variables----
 const app: Express = express();
@@ -14,9 +14,9 @@ const PORT: number = 3000;
 export const UPLOAD_DIR: string = path.join(__dirname, "../", "upload");
 export let currentPath: string = "/superfolder";
 export const RESPONSE_CODES = {
-	OK: 0,
-	ALREADY_EXISTS: 1,
-	ERROR: 2
+	OK: 200,
+	ALREADY_EXISTS: 409,
+	ERROR: 500
 };
 
 export function setCurrentPath(value: string): void {

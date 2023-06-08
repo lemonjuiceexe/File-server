@@ -2,6 +2,17 @@
 {{>sidebar}}
 {{>filelist}}
 
+{{#if errorResourceExists}}
+    <script defer>
+        alert("Resource already exists!");
+    </script>
+{{/if}}
+{{#if errorInternal}}
+    <script defer>
+        alert("Something went wrong :(");
+    </script>
+{{/if}}
+
 <style>
     body {
         width: 100vw;
