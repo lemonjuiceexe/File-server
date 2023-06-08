@@ -16,48 +16,48 @@
 </aside>
 
 <script>
-    function cancelNewFolderHandler(){
+    function cancelNewFolderHandler() {
         document.querySelector("#newFolderDialog").close();
     }
-	function openNewFolderHandler(){
-		document.querySelector("#newFolderDialog").showModal();
+
+    function openNewFolderHandler() {
+        document.querySelector("#newFolderDialog").showModal();
     }
-    function newFolderSubmitHandler(){
+
+    function newFolderSubmitHandler() {
         const folderName = document.querySelector("#folderNameInput").value;
         if (folderName != null) {
-			console.log('fetch');
-			console.log(folderName);
-			fetch("/createFolder", {
-				method: "POST",
+            fetch("/createFolder", {
+                method: "POST",
                 headers: {
                     "Content-Type": "application/json"
                 },
                 keepalive: true,
                 body: JSON.stringify({
-					folderName: folderName
-				})
-            })
-                .then(response => {
-                    if(response.redirected){
-                        window.location.href = response.url;
-                    }
-                    else{
-                        return response.json();
-                    }
+                    folderName: folderName
                 })
-                .catch(error => console.log(error));
+            })
+                    .then(response => {
+                        if (response.redirected) {
+                            window.location.href = response.url;
+                        } else {
+                            return response.json();
+                        }
+                    })
+                    .catch(error => console.log(error));
         }
     }
 </script>
 <style>
-    dialog{
+    dialog {
         position: fixed;
         left: 50%;
         top: 50%;
         transform: translate(-50%, -50%);
         padding: 20px;
     }
-    .dialog-title{
+
+    .dialog-title {
         display: block;
         margin: 10px 0;
     }
