@@ -6,7 +6,7 @@ import path from "path";
 // import bodyParser from 'body-parser';
 // Custom
 import mainRouter from "./routes/main";
-import createRouter from "./routes/create_delete";
+import createDeleteRouter from "./routes/create_delete";
 
 // ----Variables----
 const app: Express = express();
@@ -16,6 +16,7 @@ export let currentPath: string = "/superfolder";
 export const RESPONSE_CODES = {
 	OK: 200,
 	ALREADY_EXISTS: 409,
+	NOT_FOUND: 404,
 	ERROR: 500
 };
 
@@ -30,7 +31,8 @@ app.engine(
 		layoutsDir: "views/layouts",
 		partialsDir: "views/partials",
 		defaultLayout: "main",
-		extname: ".hbs"
+		extname: ".hbs",
+		helpers: {}
 	}).engine
 );
 app.set("view engine", "hbs");
@@ -41,7 +43,7 @@ app.use(express.json());
 
 // ----Routes----
 app.use("/", mainRouter);
-app.use("/", createRouter);
+app.use("/", createDeleteRouter);
 
 // ----Server----
 app.listen(PORT, () => {

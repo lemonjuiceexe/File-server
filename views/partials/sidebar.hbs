@@ -44,13 +44,13 @@
             throw new Error("Invalid argument in submitDialogHandler function.");
         }
         const nameToCreate = document.querySelector("#dialog-name-input").value;
-		const url = type === "folder" ? "/createFolder" : "/createFile";
-		const body = type === "folder" ?
-                { folderName: nameToCreate } :
-                { fileName: nameToCreate };
+		const body = {
+            resourceName: nameToCreate,
+            resourceType: type
+        };
 
         if (nameToCreate != null) {
-            fetch(url, {
+            fetch("/createResource", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -86,6 +86,7 @@
     }
 
 </script>
+
 <style>
     dialog {
         position: fixed;
