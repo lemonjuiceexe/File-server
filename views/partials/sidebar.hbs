@@ -25,7 +25,8 @@
 		// Change dialog text wheter creating folder or file
 		const dialogTitle = document.querySelector(".dialog-title");
 		dialogTitle.innerText = `Create new ${type} in {{currentPath}}`;
-
+        const dialogNameInput = document.querySelector("#dialog-name-input");
+        dialogNameInput.value = "";
 		// Change submit button handler to create folder or file
 		const submitButton = document.querySelector("#submit-dialog");
 		submitButton.onclick = () => submitDialogHandler(type);
