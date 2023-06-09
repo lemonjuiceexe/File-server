@@ -2,8 +2,11 @@
     <button onclick="openDialogHandler('folder')">New folder</button>
     <button onclick="openDialogHandler('file')">New file</button>
     <div>
-        <label for="upload">Upload</label>
-        <input id="upload" type="file" multiple>
+        <form method="POST" action="/upload" enctype="multipart/form-data">
+            <label for="upload">Upload</label>
+            <input id="upload" type="file" name="files" multiple>
+            <button type="submit">Prześlij</button>
+        </form>
     </div>
     <dialog id="create-dialog">
         <label for="dialog-name-input" class="dialog-title">
@@ -16,40 +19,41 @@
 </aside>
 
 <script>
+    // ----Uploading----
+
     // ----Creating a resource----
     // Opens a dialog and changes its content depending on type - folder or file
-	function openDialogHandler(type){
-		if(!["folder", "file"].includes(type)){
+    function openDialogHandler(type) {
+        if (!["folder", "file"].includes(type)) {
             throw new Error("Invalid argument in openDialogHandler function.");
         }
-		// Change dialog text wheter creating folder or file
-		const dialogTitle = document.querySelector(".dialog-title");
-		dialogTitle.innerText = `Create new ${type} in {{currentPath}}`;
+        // Change dialog text wheter creating folder or file
+        const dialogTitle = document.querySelector(".dialog-title");
+        dialogTitle.innerText = `Create new ${type} in {{currentPath}}`;
         const dialogNameInput = document.querySelector("#dialog-name-input");
         dialogNameInput.value = "";
-		// Change submit button handler to create folder or file
-		const submitButton = document.querySelector("#submit-dialog");
-		submitButton.onclick = () => submitDialogHandler(type);
+        // Change submit button handler to create folder or file
+        const submitButton = document.querySelector("#submit-dialog");
+        submitButton.onclick = () => submitDialogHandler(type);
 
-		// Bind escape to cancel and enter to submit
+        // Bind escape to cancel and enter to submit
         window.addEventListener("keydown", e => dialogKeyBinds(e, type));
 
-		document.querySelector("#create-dialog").showModal();
+        document.querySelector("#create-dialog").showModal();
     }
     function cancelDialogHandler() {
-		// Unbind escape and enter
+        // Unbind escape and enter
         window.removeEventListener("keydown", dialogKeyBinds);
 
         document.querySelector("#create-dialog").close();
     }
-
-	// Fetch to a proper endpoint to create folder or file
+    // Fetch to a proper endpoint to create folder or file
     function submitDialogHandler(type) {
         if (!["folder", "file"].includes(type)) {
             throw new Error("Invalid argument in submitDialogHandler function.");
         }
         const nameToCreate = document.querySelector("#dialog-name-input").value;
-		const body = {
+        const body = {
             resourceName: nameToCreate,
             resourceType: type
         };
@@ -63,19 +67,18 @@
                 keepalive: true,
                 body: JSON.stringify(body)
             })
-                .then(response => {
-					console.log(response.status);
-                    if (response.redirected) {
-                        window.location.href = response.url;
-                    } else {
-                        return response.json();
-                    }
-                })
-                .catch(error => console.log(error));
+                    .then(response => {
+                        console.log(response.status);
+                        if (response.redirected) {
+                            window.location.href = response.url;
+                        } else {
+                            return response.json();
+                        }
+                    })
+                    .catch(error => console.log(error));
         }
     }
-
-	function dialogKeyBinds(event, type) {
+    function dialogKeyBinds(event, type) {
         if (event.key === "Escape") {
             cancelDialogHandler();
         } else if (event.key === "Enter") {

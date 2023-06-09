@@ -25,7 +25,7 @@ async function createFolder(folderPath: string) {
 			.mkdir(path.join(UPLOAD_DIR, folderPath))
 			.then(() => console.log("🔨 Created folder: " + folderPath))
 			.catch(error => {
-				console.log("⛔ Failed to create folder: " + folderPath);
+				console.log("🚨 Failed to create folder: " + folderPath);
 				console.log("Reason: " + error);
 				errorCode = RESPONSE_CODES.ERROR;
 			});
@@ -43,7 +43,7 @@ async function createFile(filePath: string): Promise<number> {
 			.appendFile(path.join(UPLOAD_DIR, filePath), "")
 			.then(() => console.log("🔨 Created file: " + filePath))
 			.catch(error => {
-				console.log("⛔ Failed to create file: " + filePath);
+				console.log("🚨 Failed to create file: " + filePath);
 				console.log("Reason: " + error);
 				errorCode = RESPONSE_CODES.ERROR;
 			});
@@ -62,12 +62,12 @@ async function deleteFolder(folderPath: string): Promise<number> {
 			.catch(error => {
 				switch (error.code) {
 					case "ENOTEMPTY":
-						console.log("⛔ Failed to delete folder: " + folderPath);
+						console.log("🚨 Failed to delete folder: " + folderPath);
 						console.log("Reason: Folder is not empty");
 						errorCode = RESPONSE_CODES.NOT_EMPTY;
 						break;
 					default:
-						console.log("⛔ Failed to delete folder: " + folderPath);
+						console.log("🚨 Failed to delete folder: " + folderPath);
 						console.log("Reason: " + error);
 						errorCode = RESPONSE_CODES.ERROR;
 						break;
@@ -85,7 +85,7 @@ async function deleteFile(filePath: string): Promise<number> {
 			.unlink(path.join(UPLOAD_DIR, filePath))
 			.then(() => console.log("🗑️ Deleted file: " + filePath))
 			.catch(error => {
-				console.log("⛔ Failed to delete file: " + filePath);
+				console.log("🚨 Failed to delete file: " + filePath);
 				console.log("Reason: " + error);
 				errorCode = RESPONSE_CODES.ERROR;
 			});

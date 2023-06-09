@@ -3,16 +3,16 @@
 import express, { Express, Request, Response, Router } from "express";
 import { create } from "express-handlebars";
 import path from "path";
-// import bodyParser from 'body-parser';
 // Custom
 import mainRouter from "./routes/main";
 import createDeleteRouter from "./routes/create_delete";
+import uploadRouter from "./routes/upload";
 
 // ----Variables----
 const app: Express = express();
 const PORT: number = 3000;
 export const UPLOAD_DIR: string = path.join(__dirname, "../", "upload");
-export let currentPath: string = "/superfolder";
+export let currentPath: string = "/superfolder/podfolder";
 export const RESPONSE_CODES = {
 	OK: 200,
 	NOT_FOUND: 404,
@@ -58,6 +58,7 @@ app.use(express.json());
 // ----Routes----
 app.use("/", mainRouter);
 app.use("/", createDeleteRouter);
+app.use("/", uploadRouter);
 
 // ----Server----
 app.listen(PORT, () => {
