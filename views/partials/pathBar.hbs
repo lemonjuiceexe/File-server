@@ -1,6 +1,6 @@
 <div class="pathBarWrapper">
-    <span>root > </span>
-    {{#each currentPathFormatted}}
-        <span>{{this}} > </span>
+    <a href="/tree">root </a>
+    {{#each progressivePath}}
+        <a href="/tree{{this}}"> &gt; {{folderFromProgressivePath this}}</a>
     {{/each}}
 </div>

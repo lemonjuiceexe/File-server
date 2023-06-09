@@ -33,13 +33,28 @@ async function getFiles(folder: string): Promise<IFiles> {
 }
 
 router.get("/", (req: Request, res: Response): void => {
+	res.redirect("/tree");
+});
+router.get("/tree((/:path)+)?", (req: Request, res: Response): void => {
+	const path: string = req.url.split("/tree/")[1];
+	console.log("got path " + path);
+	setCurrentPath(path ? path : "");
+
+	// Generate a progressive path
+	// ex. for /tree/folder1/folder2, the progressive path is ["/", "/folder1", "/folder1/folder2"]
+	const splittedPath: string[] = currentPath.split("/");
+	let progressivePath: string[] = [];
+	for (let i: number = 0; i < splittedPath.length; i++) {
+		progressivePath.push("/" + splittedPath.slice(0, i + 1).join("/"));
+	}
+
 	getFiles(currentPath).then((result: IFiles): void => {
 		const responseCode: number = req.query.responseCode ? parseFloat(req.query.responseCode as string) : 200;
 		res.render("root.hbs", {
 			files: result.files,
 			folders: result.folders,
 			currentPath: currentPath,
-			currentPathFormatted: currentPath.split("/").filter(el => el.length),
+			progressivePath: progressivePath,
 			statusCode: responseCode === 200 ? undefined : responseCode
 		});
 	});

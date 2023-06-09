@@ -12,7 +12,7 @@ import uploadRouter from "./routes/upload";
 const app: Express = express();
 const PORT: number = 3000;
 export const UPLOAD_DIR: string = path.join(__dirname, "../", "upload");
-export let currentPath: string = "/superfolder/podfolder";
+export let currentPath: string = "";
 export const RESPONSE_CODES = {
 	OK: 200,
 	NOT_FOUND: 404,
@@ -45,6 +45,10 @@ app.engine(
 					default:
 						return "Internal server error occured";
 				}
+			},
+			folderFromProgressivePath: (progressivePath: string): string => {
+				const pathArray: string[] = progressivePath.split("/");
+				return pathArray[pathArray.length - 1];
 			}
 		}
 	}).engine
