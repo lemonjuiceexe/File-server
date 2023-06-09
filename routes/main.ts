@@ -35,10 +35,12 @@ async function getFiles(folder: string): Promise<IFiles> {
 router.get("/", (req: Request, res: Response): void => {
 	res.redirect("/tree");
 });
+// Catches all filepaths that start with /tree/
 router.get("/tree((/:path)+)?", (req: Request, res: Response): void => {
-	const path: string = req.url.split("/tree/")[1];
-	console.log("got path " + path);
-	setCurrentPath(path ? path : "");
+	// Get the path from the url - do funny things to make sure it is valid
+	let pathReceived: string = (req.url + "/").split("/tree/")[1].replace("//", "/");
+	if (pathReceived === "/") pathReceived = "";
+	setCurrentPath(pathReceived ? pathReceived : "");
 
 	// Generate a progressive path
 	// ex. for /tree/folder1/folder2, the progressive path is ["/", "/folder1", "/folder1/folder2"]
@@ -47,9 +49,12 @@ router.get("/tree((/:path)+)?", (req: Request, res: Response): void => {
 	for (let i: number = 0; i < splittedPath.length; i++) {
 		progressivePath.push("/" + splittedPath.slice(0, i + 1).join("/"));
 	}
+	progressivePath = progressivePath.map((el: string): string => el.replace("//", "/"));
 
+	console.log("got progressive path " + progressivePath);
 	getFiles(currentPath).then((result: IFiles): void => {
 		const responseCode: number = req.query.responseCode ? parseFloat(req.query.responseCode as string) : 200;
+		console.log("rendering currpath " + currentPath);
 		res.render("root.hbs", {
 			files: result.files,
 			folders: result.folders,

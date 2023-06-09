@@ -1,7 +1,6 @@
 {{>header}}
 {{>sidebar}}
-{{>filelist}}
-
+{{>filelist currentPath=currentPath}}
 {{#if statusCode}}
     <script>
         alert("{{statusCodeMessage statusCode}}");

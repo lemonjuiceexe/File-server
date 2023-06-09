@@ -49,6 +49,9 @@ app.engine(
 			folderFromProgressivePath: (progressivePath: string): string => {
 				const pathArray: string[] = progressivePath.split("/");
 				return pathArray[pathArray.length - 1];
+			},
+			concatenate: (str1: string, str2: string, str3: string): string => {
+				return str1 + str2 + str3;
 			}
 		}
 	}).engine
