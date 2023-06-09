@@ -24,7 +24,7 @@ router.post("/upload", (req: Request, res: Response): void => {
 		receivedFiles.forEach((file: formidable.File): void => {
 			try {
 				const new_path: string = path.join(currentPath, file.originalFilename!);
-				console.log("🗃️ Uploading file " + file.originalFilename);
+				console.log("📡 Uploading file " + file.originalFilename);
 			} catch (err) {
 				console.log("🚨 Error uploading file " + file.originalFilename);
 				console.log(err);
@@ -33,7 +33,7 @@ router.post("/upload", (req: Request, res: Response): void => {
 		});
 		if (errorCode) res.redirect(`/?responseCode=${errorCode}`);
 	});
-	res.redirect("/");
+	res.redirect("/tree/" + currentPath);
 });
 
 export default router;

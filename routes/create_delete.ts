@@ -102,7 +102,7 @@ router.post("/createResource", async (req: Request, res: Response): Promise<void
 		resourceType === "folder" ? await createFolder(resourcePath) : await createFile(resourcePath);
 
 	if (responseCode === RESPONSE_CODES.OK) {
-		res.redirect("/");
+		res.redirect("/tree/" + currentPath);
 		return;
 	}
 	res.redirect(`/?responseCode=${responseCode}`);
@@ -114,7 +114,7 @@ router.post("/deleteResource", async (req: Request, res: Response): Promise<void
 		resourceType === "folder" ? await deleteFolder(resourcePath) : await deleteFile(resourcePath);
 
 	if (responseCode === RESPONSE_CODES.OK) {
-		res.redirect("/");
+		res.redirect("/tree/" + currentPath);
 		return;
 	}
 	res.redirect(`/?responseCode=${responseCode}`);
