@@ -2,14 +2,11 @@
     {{> pathBar}}
     <div class="elements">
         {{#each folders}}
-            <p>{{concatenate "/tree/" @root/currentPath this}}</p>
-            <!--            <p>{{concatenate "/tree/" @root/currentPath this}}</p>-->
             <a class="element folder"
                href="{{concatenate "/tree/" @root/currentPath this}}">
                 {{this}}
                 <button class="element-delete-button"
-                        onclick="deleteResource('{{this}}', 'folder')"
-                >
+                        onclick="deleteResource('{{this}}', 'folder')">
                     X
                 </button>
             </a>
@@ -70,7 +67,7 @@
 
     .element {
         position: relative;
-        display: inline-block;
+        display: block;
         width: 20%;
         max-width: 100px;
         aspect-ratio: 1/1;
@@ -79,6 +76,7 @@
     }
     .element-delete-button {
         position: absolute;
+        display: block;
         top: 0;
         right: 0;
         width: 1.7em;

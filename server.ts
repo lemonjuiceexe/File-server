@@ -52,7 +52,8 @@ app.engine(
 			},
 			concatenate: (str1: string, str2: string, str3: string): string => {
 				return str1 + str2 + str3;
-			}
+			},
+			decodeURI: (uri: string): string => decodeURIComponent(uri)
 		}
 	}).engine
 );

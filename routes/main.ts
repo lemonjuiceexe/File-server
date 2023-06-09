@@ -10,8 +10,7 @@ const router: Router = express.Router();
 
 // Folder is a path relative to the upload directory
 async function getFiles(folder: string): Promise<IFiles> {
-	let fullPath = path.join(UPLOAD_DIR, folder);
-	// const fullPath = path.join(__dirname, "../..", UPLOAD_DIR + "/" + folder);
+	let fullPath: string = path.join(UPLOAD_DIR, folder);
 	let files: string[] = [],
 		folders: string[] = [];
 
@@ -38,7 +37,9 @@ router.get("/", (req: Request, res: Response): void => {
 // Catches all filepaths that start with /tree/
 router.get("/tree((/:path)+)?", (req: Request, res: Response): void => {
 	// Get the path from the url - do funny things to make sure it is valid
-	let pathReceived: string = (req.url + "/").split("/tree/")[1].replace("//", "/");
+	let pathReceived: string = decodeURIComponent(req.url + "/")
+		.split("/tree/")[1]
+		.replace(/\/\//g, "/");
 	if (pathReceived === "/") pathReceived = "";
 	setCurrentPath(pathReceived ? pathReceived : "");
 
@@ -51,10 +52,8 @@ router.get("/tree((/:path)+)?", (req: Request, res: Response): void => {
 	}
 	progressivePath = progressivePath.map((el: string): string => el.replace("//", "/"));
 
-	console.log("got progressive path " + progressivePath);
 	getFiles(currentPath).then((result: IFiles): void => {
 		const responseCode: number = req.query.responseCode ? parseFloat(req.query.responseCode as string) : 200;
-		console.log("rendering currpath " + currentPath);
 		res.render("root.hbs", {
 			files: result.files,
 			folders: result.folders,
