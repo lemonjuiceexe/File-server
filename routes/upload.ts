@@ -20,9 +20,6 @@ router.post("/upload", (req: Request, res: Response): void => {
 	form.parse(req, (err, fields: formidable.Fields, files: formidable.Files): void => {
 		const receivedFiles: formidable.File[] = files.files as formidable.File[];
 		let errorCode: number = 0;
-		if (receivedFiles.length === 1) {
-			console.log("jestem plikiem jednym bardzo smutene");
-		}
 		// When uploading a single file, even though receivedFiles is cast to an array, the .forEach failes
 		// The file, however, is somehow still being uploaded. The empty try-catch is a workaround.
 		try {

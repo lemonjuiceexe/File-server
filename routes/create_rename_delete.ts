@@ -103,8 +103,6 @@ async function deleteFile(filePath: string): Promise<number> {
 }
 
 async function renameResource(oldPath: string, newName: string): Promise<number> {
-	if (!nameIsValid(newName)) return RESPONSE_CODES.INVALID_NAME;
-
 	const newPath: string = path.join(path.dirname(oldPath), newName);
 	const oldExists: boolean = await resourceExists(oldPath);
 	const newExists: boolean = await resourceExists(newPath);
@@ -130,7 +128,7 @@ async function renameResource(oldPath: string, newName: string): Promise<number>
 // ----Routes----
 router.post("/createResource", async (req: Request, res: Response): Promise<void> => {
 	if (!nameIsValid(req.body.resourceName)) {
-		res.redirect(`/?responseCode=${RESPONSE_CODES.INVALID_NAME}`);
+		res.redirect(`/tree/${currentPath}?responseCode=${RESPONSE_CODES.INVALID_NAME}`);
 		return;
 	}
 	const resourceType: string = req.body.resourceType;
@@ -138,16 +136,17 @@ router.post("/createResource", async (req: Request, res: Response): Promise<void
 	const responseCode: number =
 		resourceType === "folder" ? await createFolder(resourcePath) : await createFile(resourcePath);
 
+	console.log("Creating response code: " + responseCode);
+
 	if (responseCode === RESPONSE_CODES.OK) {
 		res.redirect("/tree/" + currentPath);
 		return;
 	}
-	//TODO: Redirect to current path with error code
-	res.redirect(`/?responseCode=${responseCode}`);
+	res.redirect(`/tree/${currentPath}?responseCode=${responseCode}`);
 });
 router.post("/renameResource", async (req: Request, res: Response): Promise<void> => {
-	if (!nameIsValid(req.body.newName)) {
-		res.redirect(`/?responseCode=${RESPONSE_CODES.INVALID_NAME}`);
+	if (!nameIsValid(req.body.newName) || !nameIsValid(req.body.oldName)) {
+		res.redirect(`/tree/${currentPath}?responseCode=${RESPONSE_CODES.INVALID_NAME}`);
 		return;
 	}
 	const pathToRename: string = path.join(currentPath, req.body.oldName);
@@ -157,11 +156,11 @@ router.post("/renameResource", async (req: Request, res: Response): Promise<void
 		res.redirect("/tree/" + currentPath);
 		return;
 	}
-	res.redirect(`/?responseCode=${responseCode}`);
+	res.redirect(`/tree/${currentPath}?responseCode=${responseCode}`);
 });
 router.post("/deleteResource", async (req: Request, res: Response): Promise<void> => {
 	if (!nameIsValid(req.body.resourceName)) {
-		res.redirect(`/?responseCode=${RESPONSE_CODES.INVALID_NAME}`);
+		res.redirect(`/tree/${currentPath}?responseCode=${RESPONSE_CODES.INVALID_NAME}`);
 		return;
 	}
 	const resourceType: string = req.body.resourceType;
@@ -173,7 +172,7 @@ router.post("/deleteResource", async (req: Request, res: Response): Promise<void
 		res.redirect("/tree/" + currentPath);
 		return;
 	}
-	res.redirect(`/?responseCode=${responseCode}`);
+	res.redirect(`/tree/${currentPath}?responseCode=${responseCode}`);
 });
 
 export default router;

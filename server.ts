@@ -43,6 +43,8 @@ app.engine(
 						return "Resource already exists";
 					case RESPONSE_CODES.NOT_EMPTY:
 						return "Folder is not empty";
+					case RESPONSE_CODES.INVALID_NAME:
+						return "This name is not allowed. Please choose a new one.";
 					default:
 						return "Internal server error occured";
 				}

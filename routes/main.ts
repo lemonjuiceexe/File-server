@@ -38,8 +38,9 @@ router.get("/", (req: Request, res: Response): void => {
 router.get("/tree((/:path)+)?", (req: Request, res: Response): void => {
 	// Get the path from the url - do funny things to make sure it is valid
 	let pathReceived: string = decodeURIComponent(req.url + "/")
-		.split("/tree/")[1]
-		.replace(/\/\//g, "/");
+		.split("/tree/")[1] // Path after /tree/
+		.split("?")[0] // Don't include query parameters
+		.replace(/\/\//g, "/"); // Replace all double slashes with single slashes
 	if (pathReceived === "/") pathReceived = "";
 	setCurrentPath(pathReceived ? pathReceived : "");
 
