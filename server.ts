@@ -5,7 +5,7 @@ import { create } from "express-handlebars";
 import path from "path";
 // Custom
 import mainRouter from "./routes/main";
-import createDeleteRouter from "./routes/create_delete";
+import createDeleteRouter from "./routes/create_rename_delete";
 import uploadRouter from "./routes/upload";
 
 // ----Variables----

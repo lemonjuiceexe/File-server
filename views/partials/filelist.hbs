@@ -5,7 +5,10 @@
             <div class="element folder">
                 <a class="element-link"
                    href="{{concatenate "/tree/" @root/currentPath this}}">{{this}}</a>
-                <button class="element-button-rename">Rn</button>
+                <button class="element-button-rename"
+                        onclick="renameResource('{{this}}')">
+                    Rn
+                </button>
                 <button class="element-button-delete"
                         onclick="deleteResource('{{this}}', 'folder')">
                     X
@@ -15,10 +18,12 @@
         {{#each files}}
             <div class="element file">
                 {{this}}
-                <button class="element-button-rename">Rn</button>
+                <button class="element-button-rename"
+                        onclick="renameResource('{{this}}')">
+                    Rn
+                </button>
                 <button class="element-button-delete"
-                        onclick="deleteResource('{{this}}', 'file')"
-                >
+                        onclick="deleteResource('{{this}}', 'file')">
                     X
                 </button>
             </div>
@@ -27,6 +32,33 @@
 </div>
 
 <script>
+    function renameResource(oldName) {
+        //TODO: Rewrite to html dialog
+        const newName = prompt("Enter new name:");
+        if (newName === null) {
+            return;
+        }
+        const body = {
+            oldName: oldName,
+            newName: newName
+        };
+        fetch("/renameResource", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            keepalive: true,
+            body: JSON.stringify(body)
+        })
+                .then(response => {
+                    if (response.redirected) {
+                        window.location.href = response.url;
+                    } else {
+                        return response.json();
+                    }
+                })
+                .catch(error => console.log(error));
+    }
     function deleteResource(name, type) {
         if (!["folder", "file"].includes(type)) {
             throw new Error("Invalid argument in deleteResource function.");

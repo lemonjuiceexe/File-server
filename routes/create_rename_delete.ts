@@ -94,12 +94,46 @@ async function deleteFile(filePath: string): Promise<number> {
 	return fileExists ? RESPONSE_CODES.OK : RESPONSE_CODES.NOT_FOUND;
 }
 
+async function renameResource(oldPath: string, newName: string): Promise<number> {
+	// Consider, that the name is not a full path
+	const newPath: string = path.join(path.dirname(oldPath), newName);
+	const oldExists: boolean = await resourceExists(oldPath);
+	const newExists: boolean = await resourceExists(newPath);
+	if (oldExists && !newExists) {
+		let errorCode: number = 0;
+		await filesystemPromises
+			.rename(path.join(UPLOAD_DIR, oldPath), path.join(UPLOAD_DIR, newPath))
+			.then(() => console.log("📝 Renamed resource: " + oldPath + " -> " + newPath))
+			.catch(error => {
+				console.log("🚨 Failed to rename resource: " + oldPath);
+				console.log("Reason: " + error);
+				errorCode = RESPONSE_CODES.ERROR;
+			});
+		if (errorCode) return errorCode;
+	} else if (newExists) {
+		return RESPONSE_CODES.ALREADY_EXISTS;
+	} else if (!oldExists) {
+		return RESPONSE_CODES.NOT_FOUND;
+	}
+	return RESPONSE_CODES.OK;
+}
+
 // ----Routes----
 router.post("/createResource", async (req: Request, res: Response): Promise<void> => {
 	const resourceType: string = req.body.resourceType;
 	const resourcePath: string = path.join(currentPath, req.body.resourceName);
 	const responseCode: number =
 		resourceType === "folder" ? await createFolder(resourcePath) : await createFile(resourcePath);
+
+	if (responseCode === RESPONSE_CODES.OK) {
+		res.redirect("/tree/" + currentPath);
+		return;
+	}
+	res.redirect(`/?responseCode=${responseCode}`);
+});
+router.post("/renameResource", async (req: Request, res: Response): Promise<void> => {
+	const pathToRename: string = path.join(currentPath, req.body.oldName);
+	const responseCode: number = await renameResource(pathToRename, req.body.newName);
 
 	if (responseCode === RESPONSE_CODES.OK) {
 		res.redirect("/tree/" + currentPath);
