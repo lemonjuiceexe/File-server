@@ -7,6 +7,7 @@ import path from "path";
 import mainRouter from "./routes/main";
 import createDeleteRouter from "./routes/create_rename_delete";
 import uploadRouter from "./routes/upload";
+import registerLoginRouter from "./routes/login_register";
 
 // ----Variables----
 const app: Express = express();
@@ -70,6 +71,7 @@ app.use(express.json());
 app.use("/", mainRouter);
 app.use("/", createDeleteRouter);
 app.use("/", uploadRouter);
+app.use("/", registerLoginRouter);
 
 // ----Server----
 app.listen(PORT, () => {
