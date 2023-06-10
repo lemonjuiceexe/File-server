@@ -15,8 +15,8 @@ function resourceExists(resourcePath: string): Promise<boolean> {
 		.catch(() => false);
 }
 function nameIsValid(name: string): boolean {
-	console.log("Checking if name is valid: " + name);
-	const illegalCharacters: string[] = ["/", "\\", ":", "*", "?", '"', "<", ">", "|", "..", "#"];
+	//TODO: Work on allowing %, maybe # too
+	const illegalCharacters: string[] = ["/", "\\", ":", "*", "?", '"', "<", ">", "|", "..", "#", "%"];
 	for (const character of illegalCharacters) {
 		if (name.includes(character)) return false;
 	}
