@@ -14,10 +14,18 @@ function resourceExists(resourcePath: string): Promise<boolean> {
 		.then(() => true)
 		.catch(() => false);
 }
+function nameIsValid(name: string): boolean {
+	console.log("Checking if name is valid: " + name);
+	const illegalCharacters: string[] = ["/", "\\", ":", "*", "?", '"', "<", ">", "|", "..", "#"];
+	for (const character of illegalCharacters) {
+		if (name.includes(character)) return false;
+	}
+	return true;
+}
 
-// ----Functions for creating/deleting----
+// ----Functions for creating/renaming/deleting----
 // Folder path relative to the upload directory
-async function createFolder(folderPath: string) {
+async function createFolder(folderPath: string): Promise<number> {
 	const folderExists: boolean = await resourceExists(folderPath);
 	if (!folderExists) {
 		let errorCode: number = 0;
@@ -95,7 +103,8 @@ async function deleteFile(filePath: string): Promise<number> {
 }
 
 async function renameResource(oldPath: string, newName: string): Promise<number> {
-	// Consider, that the name is not a full path
+	if (!nameIsValid(newName)) return RESPONSE_CODES.INVALID_NAME;
+
 	const newPath: string = path.join(path.dirname(oldPath), newName);
 	const oldExists: boolean = await resourceExists(oldPath);
 	const newExists: boolean = await resourceExists(newPath);
@@ -120,6 +129,10 @@ async function renameResource(oldPath: string, newName: string): Promise<number>
 
 // ----Routes----
 router.post("/createResource", async (req: Request, res: Response): Promise<void> => {
+	if (!nameIsValid(req.body.resourceName)) {
+		res.redirect(`/?responseCode=${RESPONSE_CODES.INVALID_NAME}`);
+		return;
+	}
 	const resourceType: string = req.body.resourceType;
 	const resourcePath: string = path.join(currentPath, req.body.resourceName);
 	const responseCode: number =
@@ -129,9 +142,14 @@ router.post("/createResource", async (req: Request, res: Response): Promise<void
 		res.redirect("/tree/" + currentPath);
 		return;
 	}
+	//TODO: Redirect to current path with error code
 	res.redirect(`/?responseCode=${responseCode}`);
 });
 router.post("/renameResource", async (req: Request, res: Response): Promise<void> => {
+	if (!nameIsValid(req.body.newName)) {
+		res.redirect(`/?responseCode=${RESPONSE_CODES.INVALID_NAME}`);
+		return;
+	}
 	const pathToRename: string = path.join(currentPath, req.body.oldName);
 	const responseCode: number = await renameResource(pathToRename, req.body.newName);
 
@@ -142,6 +160,10 @@ router.post("/renameResource", async (req: Request, res: Response): Promise<void
 	res.redirect(`/?responseCode=${responseCode}`);
 });
 router.post("/deleteResource", async (req: Request, res: Response): Promise<void> => {
+	if (!nameIsValid(req.body.resourceName)) {
+		res.redirect(`/?responseCode=${RESPONSE_CODES.INVALID_NAME}`);
+		return;
+	}
 	const resourceType: string = req.body.resourceType;
 	const resourcePath: string = path.join(currentPath, req.body.resourceName);
 	const responseCode: number =
