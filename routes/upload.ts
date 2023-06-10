@@ -9,7 +9,6 @@ import { UPLOAD_DIR, currentPath, RESPONSE_CODES } from "../server";
 const router: Router = express.Router();
 
 router.post("/upload", (req: Request, res: Response): void => {
-	console.log("upload");
 	const form: IncomingForm = formidable({
 		multiples: true,
 		keepExtensions: true,
@@ -21,16 +20,23 @@ router.post("/upload", (req: Request, res: Response): void => {
 	form.parse(req, (err, fields: formidable.Fields, files: formidable.Files): void => {
 		const receivedFiles: formidable.File[] = files.files as formidable.File[];
 		let errorCode: number = 0;
-		receivedFiles.forEach((file: formidable.File): void => {
-			try {
-				const new_path: string = path.join(currentPath, file.originalFilename!);
-				console.log("📡 Uploading file " + file.originalFilename);
-			} catch (err) {
-				console.log("🚨 Error uploading file " + file.originalFilename);
-				console.log(err);
-				errorCode = RESPONSE_CODES.ERROR;
-			}
-		});
+		if (receivedFiles.length === 1) {
+			console.log("jestem plikiem jednym bardzo smutene");
+		}
+		// When uploading a single file, even though receivedFiles is cast to an array, the .forEach failes
+		// The file, however, is somehow still being uploaded. The empty try-catch is a workaround.
+		try {
+			receivedFiles.forEach((file: formidable.File): void => {
+				try {
+					const new_path: string = path.join(currentPath, file.originalFilename!);
+					console.log("📡 Uploading file " + file.originalFilename);
+				} catch (err) {
+					console.log("🚨 Error uploading file " + file.originalFilename);
+					console.log(err);
+					errorCode = RESPONSE_CODES.ERROR;
+				}
+			});
+		} catch (err) {}
 		if (errorCode) res.redirect(`/?responseCode=${errorCode}`);
 	});
 	res.redirect("/tree/" + currentPath);
