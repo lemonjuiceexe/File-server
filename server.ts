@@ -16,6 +16,7 @@ export const UPLOAD_DIR: string = path.join(__dirname, "../", "upload");
 export let currentPath: string = "";
 export const RESPONSE_CODES = {
 	OK: 200,
+	UNAUTHENTICATED: 401,
 	NOT_FOUND: 404,
 	ALREADY_EXISTS: 409.1,
 	NOT_EMPTY: 409.2,
@@ -36,6 +37,12 @@ app.engine(
 		defaultLayout: "main",
 		extname: ".hbs",
 		helpers: {
+			// TODO: make this better
+			concatenate: (str1: string, str2: string, str3: string): string => {
+				return str1 + str2 + str3;
+			},
+			eq: (a: unknown, b: unknown): boolean => a === b,
+			decodeURI: (uri: string): string => decodeURIComponent(uri),
 			statusCodeMessage: (statusCode: number): string => {
 				switch (statusCode) {
 					case RESPONSE_CODES.NOT_FOUND:
@@ -53,11 +60,7 @@ app.engine(
 			folderFromProgressivePath: (progressivePath: string): string => {
 				const pathArray: string[] = progressivePath.split("/");
 				return pathArray[pathArray.length - 1];
-			},
-			concatenate: (str1: string, str2: string, str3: string): string => {
-				return str1 + str2 + str3;
-			},
-			decodeURI: (uri: string): string => decodeURIComponent(uri)
+			}
 		}
 	}).engine
 );

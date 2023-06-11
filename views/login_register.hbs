@@ -1,5 +1,18 @@
 <h1>Hi!</h1>
-<form method="POST" action="/register">
+<h2>
+    {{#if (eq action "register")}}
+        Register
+    {{else}}
+        Login
+    {{/if}}
+</h2>
+<form method="POST"
+    {{#if (eq action "register")}}
+      action="/register"
+    {{else}}
+      action="/login"
+    {{/if}}
+>
     <div class="input-wrapper">
         <label for="input-username">Username</label>
         <input type="text" name="username" id="input-username" required/>
@@ -8,7 +21,13 @@
         <label for="input-password">Password</label>
         <input type="password" name="password" id="input-password" required/>
     </div>
-    <button type="submit">Register</button>
+    <button type="submit">
+        {{#if (eq action "register")}}
+            Register
+        {{else}}
+            Login
+        {{/if}}
+    </button>
 </form>
 
 <script>
