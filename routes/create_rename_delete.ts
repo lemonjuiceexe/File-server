@@ -4,7 +4,7 @@ import path from "path";
 
 import { UPLOAD_DIR, currentPath, RESPONSE_CODES } from "../server";
 
-const router: Router = express.Router();
+export const router: Router = express.Router();
 
 // ----Functions----
 // Path relative to the upload directory
@@ -25,7 +25,7 @@ function nameIsValid(name: string): boolean {
 
 // ----Functions for creating/renaming/deleting----
 // Folder path relative to the upload directory
-async function createFolder(folderPath: string): Promise<number> {
+export async function createFolder(folderPath: string): Promise<number> {
 	const folderExists: boolean = await resourceExists(folderPath);
 	if (!folderExists) {
 		let errorCode: number = 0;
@@ -174,5 +174,3 @@ router.post("/deleteResource", async (req: Request, res: Response): Promise<void
 	}
 	res.redirect(`/tree/${currentPath}?responseCode=${responseCode}`);
 });
-
-export default router;

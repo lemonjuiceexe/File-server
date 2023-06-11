@@ -29,9 +29,14 @@
         {{/if}}
     </button>
 </form>
+{{#if (eq action "register")}}
+    <p>Already have an account? <a href="/login">Log in</a>.</p>
+{{else}}
+    <p>Don't have an account yet? <a href="/register">Register</a>.</p>
+{{/if}}
 
 <script>
         {{#if responseCode}}
-        alert("{{responseCode}}");
+        alert("{{statusCodeMessage responseCode}}");
         {{/if}}
 </script>

@@ -1,6 +1,7 @@
 import express, { Request, Response, Router } from "express";
 import * as crypto from "crypto-js";
 
+import { createFolder } from "./create_rename_delete";
 import { addUser, authenticateUser } from "../database";
 import { generateSessionToken, deleteUserSessionTokens, TOKEN_LIFETIME } from "../auth";
 
@@ -28,6 +29,8 @@ router.post("/register", async (req: Request, res: Response): Promise<void> => {
 	const responseCode: number = await addUser(login, password);
 
 	if (responseCode === 0) {
+		// Create directory for user
+		await createFolder(login);
 		res.redirect("/login");
 		return;
 	}

@@ -7,7 +7,7 @@ import cookieParser from "cookie-parser";
 // Custom
 import { router as authRouter } from "./auth";
 import mainRouter from "./routes/main";
-import createDeleteRouter from "./routes/create_rename_delete";
+import { router as createDeleteRouter } from "./routes/create_rename_delete";
 import uploadRouter from "./routes/upload";
 import registerLoginRouter from "./routes/login_register";
 
@@ -20,6 +20,7 @@ export let currentPath: string = "";
 export const RESPONSE_CODES = {
 	OK: 200,
 	UNAUTHENTICATED: 401,
+	INVALID_CREDENTIALS: 401.1,
 	NOT_FOUND: 404,
 	ALREADY_EXISTS: 409.1,
 	NOT_EMPTY: 409.2,
@@ -48,16 +49,20 @@ app.engine(
 			decodeURI: (uri: string): string => decodeURIComponent(uri),
 			statusCodeMessage: (statusCode: number): string => {
 				switch (statusCode) {
+					case RESPONSE_CODES.UNAUTHENTICATED:
+						return "You are not logged in or your session has expired. Please log in again.";
+					case RESPONSE_CODES.INVALID_CREDENTIALS:
+						return "Invalid username or password.";
 					case RESPONSE_CODES.NOT_FOUND:
-						return "Resource not found";
+						return "Resource not found.";
 					case RESPONSE_CODES.ALREADY_EXISTS:
-						return "Resource already exists";
+						return "Resource already exists.";
 					case RESPONSE_CODES.NOT_EMPTY:
-						return "Folder is not empty";
+						return "Folder is not empty.";
 					case RESPONSE_CODES.INVALID_NAME:
 						return "This name is not allowed. Please choose a new one.";
 					default:
-						return "Internal server error occured";
+						return "Internal server error occured.";
 				}
 			},
 			folderFromProgressivePath: (progressivePath: string): string => {

@@ -54,5 +54,5 @@ export async function authenticateUser(username: string, passwordHash: string): 
 	const goodCredentials: boolean =
 		(await collection.findOne({ username: username, password: passwordHash })) !== null;
 	console.log(`🔑 User: ${username}${!goodCredentials ? " not" : ""} authenticated successfully`);
-	return goodCredentials ? 0 : 401;
+	return goodCredentials ? 0 : 401.1;
 }
