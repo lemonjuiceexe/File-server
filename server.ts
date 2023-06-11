@@ -3,7 +3,9 @@
 import express, { Express, Request, Response, Router } from "express";
 import { create } from "express-handlebars";
 import path from "path";
+import cookieParser from "cookie-parser";
 // Custom
+import { router as authRouter } from "./auth";
 import mainRouter from "./routes/main";
 import createDeleteRouter from "./routes/create_rename_delete";
 import uploadRouter from "./routes/upload";
@@ -14,6 +16,7 @@ const app: Express = express();
 const PORT: number = 3000;
 export const UPLOAD_DIR: string = path.join(__dirname, "../", "upload");
 export let currentPath: string = "";
+// TODO: rewrite this to enum
 export const RESPONSE_CODES = {
 	OK: 200,
 	UNAUTHENTICATED: 401,
@@ -69,8 +72,10 @@ app.set("views", "./views");
 app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(cookieParser());
 
 // ----Routes----
+app.use("/", authRouter); // Must be first, so every request gets authenticated
 app.use("/", mainRouter);
 app.use("/", createDeleteRouter);
 app.use("/", uploadRouter);

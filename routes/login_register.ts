@@ -2,6 +2,7 @@ import express, { Request, Response, Router } from "express";
 import * as crypto from "crypto-js";
 
 import { addUser, authenticateUser } from "../database";
+import { generateSessionToken, deleteUserSessionTokens, TOKEN_LIFETIME } from "../auth";
 
 const router: Router = express.Router();
 
@@ -33,12 +34,29 @@ router.post("/register", async (req: Request, res: Response): Promise<void> => {
 	res.redirect("/register?responseCode=" + responseCode);
 });
 router.post("/login", async (req: Request, res: Response): Promise<void> => {
-	const login: string = req.body.username;
+	const username: string = req.body.username;
 	const password: string = crypto.SHA256(req.body.password).toString();
-	const responseCode: number = await authenticateUser(login, password);
+	const responseCode: number = await authenticateUser(username, password);
 
 	if (responseCode === 0) {
-		//TODO: authorisation logic
+		// Remove old session tokens for this user
+		// - https://developer.mozilla.org/en-US/docs/Web/Security/Types_of_attacks#session_fixation
+		deleteUserSessionTokens(username);
+		// Generate and set new session token
+		const token: string = generateSessionToken(username);
+		res.cookie(
+			"sessionToken",
+			JSON.stringify({
+				username: username,
+				token: token
+			}),
+			{
+				maxAge: TOKEN_LIFETIME,
+				httpOnly: true,
+				secure: true
+			}
+		);
+
 		res.redirect("/tree");
 		return;
 	}
