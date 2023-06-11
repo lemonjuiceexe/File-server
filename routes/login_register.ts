@@ -24,6 +24,7 @@ router.get("/login", (req: Request, res: Response): void => {
 
 // Auth
 router.post("/register", async (req: Request, res: Response): Promise<void> => {
+	//TODO: Make sure that username is valid, as the folder name will be the same
 	const login: string = req.body.username;
 	const password: string = crypto.SHA256(req.body.password).toString();
 	const responseCode: number = await addUser(login, password);
@@ -60,7 +61,7 @@ router.post("/login", async (req: Request, res: Response): Promise<void> => {
 			}
 		);
 
-		res.redirect("/tree");
+		res.redirect(`/tree/${username}`);
 		return;
 	}
 	res.redirect("/login?responseCode=" + responseCode);

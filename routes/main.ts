@@ -4,7 +4,7 @@ import * as filesystemPromises from "fs/promises";
 import path from "path";
 
 import { IFiles } from "../types";
-import { UPLOAD_DIR, currentPath, setCurrentPath } from "../server";
+import { UPLOAD_DIR, currentPath, setCurrentPath, validatePath } from "../server";
 
 const router: Router = express.Router();
 
@@ -32,16 +32,16 @@ async function getFiles(folder: string): Promise<IFiles> {
 }
 
 router.get("/", (req: Request, res: Response): void => {
-	res.redirect("/tree");
+	// it's guaranteed that this cookie exists, as the request went through the auth middleware
+	const username: string = JSON.parse(req.cookies.sessionToken).username;
+	console.log("get read username: " + username);
+	res.redirect(`/tree/${username}`);
 });
 // Catches all filepaths that start with /tree/
 router.get("/tree((/:path)+)?", (req: Request, res: Response): void => {
-	// Get the path from the url - do funny things to make sure it is valid
-	let pathReceived: string = decodeURIComponent(req.url + "/")
-		.split("/tree/")[1] // Path after /tree/
-		.split("?")[0] // Don't include query parameters
-		.replace(/\/\//g, "/"); // Replace all double slashes with single slashes
-	if (pathReceived === "/") pathReceived = "";
+	// Get the path from the url, validate and set as current path
+	console.log("parsing url: " + req.url);
+	const pathReceived: string = validatePath(req.url);
 	setCurrentPath(pathReceived ? pathReceived : "");
 
 	// Generate a progressive path
@@ -52,7 +52,9 @@ router.get("/tree((/:path)+)?", (req: Request, res: Response): void => {
 		progressivePath.push("/" + splittedPath.slice(0, i + 1).join("/"));
 	}
 	progressivePath = progressivePath.map((el: string): string => el.replace("//", "/"));
+	console.log("generated progressive path: " + progressivePath);
 
+	// TODO: Add a safeguard - currently non-existing directories crash the server
 	getFiles(currentPath).then((result: IFiles): void => {
 		const responseCode: number = req.query.responseCode ? parseFloat(req.query.responseCode as string) : 200;
 		res.render("root.hbs", {

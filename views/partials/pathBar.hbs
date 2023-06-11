@@ -1,6 +1,5 @@
 <div class="pathBarWrapper">
-    <a href="/tree">root </a>
     {{#each progressivePath}}
-        <a href="/tree{{this}}"> &gt; {{decodeURI (folderFromProgressivePath this)}}</a>
+        <a href="/tree{{this}}">{{decodeURI (folderFromProgressivePath this)}} &gt; </a>
     {{/each}}
 </div>

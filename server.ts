@@ -21,6 +21,9 @@ export const RESPONSE_CODES = {
 	OK: 200,
 	UNAUTHENTICATED: 401,
 	INVALID_CREDENTIALS: 401.1,
+	// In the HTTP standard, the 401 is defined as "Unauthorized", it, however, semantically means "Unauthenticated".
+	// The 403 "Forbidden" actually means "Unauthorized".
+	UNATHORIZED: 403,
 	NOT_FOUND: 404,
 	ALREADY_EXISTS: 409.1,
 	NOT_EMPTY: 409.2,
@@ -30,6 +33,17 @@ export const RESPONSE_CODES = {
 
 export function setCurrentPath(value: string): void {
 	currentPath = value;
+}
+// Accepts full url, returns path after /tree/
+export function validatePath(pathToValidate: string): string {
+	if (pathToValidate === "/") return "";
+	let validatedPath: string = decodeURIComponent(pathToValidate + "/")
+		.split("/tree/")[1] // Path after /tree/
+		.split("?")[0] // Don't include query parameters
+		.replace(/\/\//g, "/"); // Replace all double slashes with single slashes
+	if (validatedPath === "/") validatedPath = "";
+
+	return validatedPath;
 }
 
 // ----Config----
@@ -51,6 +65,8 @@ app.engine(
 				switch (statusCode) {
 					case RESPONSE_CODES.UNAUTHENTICATED:
 						return "You are not logged in or your session has expired. Please log in again.";
+					case RESPONSE_CODES.UNATHORIZED:
+						return "You are not authorized to access this resource.";
 					case RESPONSE_CODES.INVALID_CREDENTIALS:
 						return "Invalid username or password.";
 					case RESPONSE_CODES.NOT_FOUND:

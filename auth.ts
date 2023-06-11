@@ -2,10 +2,13 @@ import express, { Express, Request, Response, Router } from "express";
 import { webcrypto } from "crypto";
 import { ISessionToken } from "./types";
 
+import { currentPath, RESPONSE_CODES, setCurrentPath, validatePath } from "./server";
+import path from "path";
+
 export const router: Router = express.Router();
 
 // TODO: Make sure that tokens are deleted after this time
-export const TOKEN_LIFETIME: number = 1000 * 20; // 20 seconds - debug purposes
+export const TOKEN_LIFETIME: number = 1000 * 60 * 5;
 let currentSessionTokens: ISessionToken[] = [];
 
 export function generateSessionToken(username: string): string {
@@ -43,6 +46,7 @@ export function deleteOldSessionTokens(): void {
 }
 
 router.use((req: Request, res: Response, next: Function): void => {
+	console.log(req.url + " requested on auth");
 	//TODO: Consider moving this function somewhere else, right now just deleting old tokens on every single request
 	deleteOldSessionTokens();
 
@@ -51,15 +55,30 @@ router.use((req: Request, res: Response, next: Function): void => {
 		next("route");
 		return;
 	}
-
+	// Deny requests with no session token
 	if (!req.cookies.sessionToken) {
-		res.redirect("/login?responseCode=401");
+		res.redirect(`/login?responseCode=${RESPONSE_CODES.UNAUTHENTICATED}`);
 		return;
 	}
+	// Verify the token
 	const sessionCookie: { username: string; token: string } = JSON.parse(req.cookies.sessionToken);
 	const goodToken: boolean = verifySessionToken(sessionCookie.username, sessionCookie.token);
 	if (!goodToken) {
-		res.redirect("/login?responseCode=401");
+		res.redirect(`/login?responseCode=${RESPONSE_CODES.UNAUTHENTICATED}`);
+		return;
+	}
+
+	// Make sure to only allow access to the user's own files
+	const username: string = sessionCookie.username;
+	// Either it's a request to */tree/* - make sure that URL matches /tree/username/*
+	// Or it's a request to /create, /rename etc. - make sure the currentPath, on which these actions are executed, matches /username/*
+	const pathToCheck: string = req.url.startsWith("/tree") ? validatePath(req.url) : currentPath;
+	if (!pathToCheck.startsWith(`${username}`)) {
+		console.log(`User ${username} tried to access ${pathToCheck} which is not their own.`);
+		console.log("Full url: " + req.url);
+		console.log("Validated: " + validatePath(req.url));
+		// This will return UNATHORIZED whether the resource actually exists or not
+		res.redirect(`/tree/${username}?responseCode=${RESPONSE_CODES.UNATHORIZED}`);
 		return;
 	}
 
