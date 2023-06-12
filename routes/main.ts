@@ -4,7 +4,8 @@ import * as filesystemPromises from "fs/promises";
 import path from "path";
 
 import { IFiles } from "../types";
-import { UPLOAD_DIR, currentPath, setCurrentPath, validatePath } from "../server";
+import { UPLOAD_DIR, RESPONSE_CODES, currentPath, setCurrentPath, validatePath } from "../server";
+import { resourceExists } from "./create_rename_delete";
 
 const router: Router = express.Router();
 
@@ -32,13 +33,10 @@ async function getFiles(folder: string): Promise<IFiles> {
 }
 
 router.get("/", (req: Request, res: Response): void => {
-	// it's guaranteed that this cookie exists, as the request went through the auth middleware
-	const username: string = JSON.parse(req.cookies.sessionToken).username;
-	console.log("get read username: " + username);
-	res.redirect(`/tree/${username}`);
+	res.redirect(`/login`);
 });
 // Catches all filepaths that start with /tree/
-router.get("/tree((/:path)+)?", (req: Request, res: Response): void => {
+router.get("/tree((/:path)+)?", async (req: Request, res: Response): Promise<void> => {
 	// Get the path from the url, validate and set as current path
 	const pathReceived: string = validatePath(req.url);
 	setCurrentPath(pathReceived ? pathReceived : "");
@@ -51,8 +49,14 @@ router.get("/tree((/:path)+)?", (req: Request, res: Response): void => {
 		progressivePath.push("/" + splittedPath.slice(0, i + 1).join("/"));
 	}
 	progressivePath = progressivePath.map((el: string): string => el.replace("//", "/"));
+	
+	if (!(await resourceExists(currentPath))) {
+		// Request contains the cookie - it's already checked by auth.ts
+		const username: string = JSON.parse(req.cookies.sessionToken).username;
+		res.redirect(`/tree/${username}?responseCode=${RESPONSE_CODES.NOT_FOUND}`);
+		return;
+	}
 
-	// TODO: Add a safeguard - currently non-existing directories crash the server
 	getFiles(currentPath).then((result: IFiles): void => {
 		const responseCode: number = req.query.responseCode ? parseFloat(req.query.responseCode as string) : 200;
 		res.render("root.hbs", {

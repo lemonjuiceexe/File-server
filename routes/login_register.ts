@@ -21,6 +21,18 @@ router.get("/login", (req: Request, res: Response): void => {
 		responseCode: responseCode ? responseCode : undefined
 	});
 });
+router.get("/logout", (req: Request, res: Response): void => {
+	const sessionToken: { username: string; token: string } = JSON.parse(req.cookies.sessionToken);
+	if (!sessionToken) {
+		res.redirect("/login");
+		return;
+	}
+	const username: string = sessionToken.username;
+	console.log(`🔑 User: ${username} logged out`);
+	deleteUserSessionTokens(username);
+	res.clearCookie("sessionToken");
+	res.redirect("/login");
+});
 
 // Auth
 router.post("/register", async (req: Request, res: Response): Promise<void> => {

@@ -50,7 +50,7 @@ router.use((req: Request, res: Response, next: Function): void => {
 	deleteOldSessionTokens();
 
 	// Routes that don't require authentication
-	if (["/login", "/register"].includes(req.url.split("?")[0])) {
+	if (["/login", "/register", "/"].includes(req.url.split("?")[0])) {
 		next("route");
 		return;
 	}
