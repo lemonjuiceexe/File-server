@@ -7,7 +7,6 @@ import path from "path";
 
 export const router: Router = express.Router();
 
-// TODO: Make sure that tokens are deleted after this time
 export const TOKEN_LIFETIME: number = 1000 * 60 * 5;
 let currentSessionTokens: ISessionToken[] = [];
 

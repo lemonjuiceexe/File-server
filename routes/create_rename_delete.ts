@@ -14,6 +14,12 @@ export function resourceExists(resourcePath: string): Promise<boolean> {
 		.then(() => true)
 		.catch(() => false);
 }
+export function isFolder(resourcePath: string): Promise<boolean> {
+	return filesystemPromises
+		.stat(path.join(UPLOAD_DIR, resourcePath))
+		.then(stats => stats.isDirectory())
+		.catch(() => false);
+}
 function nameIsValid(name: string): boolean {
 	//TODO: Work on allowing %, maybe # too
 	const illegalCharacters: string[] = ["/", "\\", ":", "*", "?", '"', "<", ">", "|", "..", "#", "%"];

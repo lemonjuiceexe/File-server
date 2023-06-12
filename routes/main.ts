@@ -5,7 +5,7 @@ import path from "path";
 
 import { IFiles } from "../types";
 import { UPLOAD_DIR, RESPONSE_CODES, currentPath, setCurrentPath, validatePath } from "../server";
-import { resourceExists } from "./create_rename_delete";
+import { resourceExists, isFolder } from "./create_rename_delete";
 
 const router: Router = express.Router();
 
@@ -40,6 +40,8 @@ router.get("/tree((/:path)+)?", async (req: Request, res: Response): Promise<voi
 	// Get the path from the url, validate and set as current path
 	const pathReceived: string = validatePath(req.url);
 	setCurrentPath(pathReceived ? pathReceived : "");
+	// Request contains the cookie - it's already checked by auth.ts
+	const username: string = JSON.parse(req.cookies.sessionToken).username;
 
 	// Generate a progressive path
 	// ex. for /tree/folder1/folder2, the progressive path is ["/", "/folder1", "/folder1/folder2"]
@@ -49,10 +51,8 @@ router.get("/tree((/:path)+)?", async (req: Request, res: Response): Promise<voi
 		progressivePath.push("/" + splittedPath.slice(0, i + 1).join("/"));
 	}
 	progressivePath = progressivePath.map((el: string): string => el.replace("//", "/"));
-	
-	if (!(await resourceExists(currentPath))) {
-		// Request contains the cookie - it's already checked by auth.ts
-		const username: string = JSON.parse(req.cookies.sessionToken).username;
+
+	if (!(await resourceExists(currentPath)) || !(await isFolder(currentPath))) {
 		res.redirect(`/tree/${username}?responseCode=${RESPONSE_CODES.NOT_FOUND}`);
 		return;
 	}
@@ -64,6 +64,7 @@ router.get("/tree((/:path)+)?", async (req: Request, res: Response): Promise<voi
 			folders: result.folders,
 			currentPath: currentPath,
 			progressivePath: progressivePath,
+			username: username,
 			statusCode: responseCode === 200 ? undefined : responseCode
 		});
 	});
