@@ -40,19 +40,17 @@ router.get("/", (req: Request, res: Response): void => {
 // Catches all filepaths that start with /tree/
 router.get("/tree((/:path)+)?", (req: Request, res: Response): void => {
 	// Get the path from the url, validate and set as current path
-	console.log("parsing url: " + req.url);
 	const pathReceived: string = validatePath(req.url);
 	setCurrentPath(pathReceived ? pathReceived : "");
 
 	// Generate a progressive path
 	// ex. for /tree/folder1/folder2, the progressive path is ["/", "/folder1", "/folder1/folder2"]
-	const splittedPath: string[] = currentPath.split("/");
+	const splittedPath: string[] = currentPath.split("/").filter((el: string): boolean => el !== "");
 	let progressivePath: string[] = [];
 	for (let i: number = 0; i < splittedPath.length; i++) {
 		progressivePath.push("/" + splittedPath.slice(0, i + 1).join("/"));
 	}
 	progressivePath = progressivePath.map((el: string): string => el.replace("//", "/"));
-	console.log("generated progressive path: " + progressivePath);
 
 	// TODO: Add a safeguard - currently non-existing directories crash the server
 	getFiles(currentPath).then((result: IFiles): void => {

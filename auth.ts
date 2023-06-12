@@ -46,7 +46,6 @@ export function deleteOldSessionTokens(): void {
 }
 
 router.use((req: Request, res: Response, next: Function): void => {
-	console.log(req.url + " requested on auth");
 	//TODO: Consider moving this function somewhere else, right now just deleting old tokens on every single request
 	deleteOldSessionTokens();
 

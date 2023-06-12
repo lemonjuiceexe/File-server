@@ -8,7 +8,7 @@ export const router: Router = express.Router();
 
 // ----Functions----
 // Path relative to the upload directory
-function resourceExists(resourcePath: string): Promise<boolean> {
+export function resourceExists(resourcePath: string): Promise<boolean> {
 	return filesystemPromises
 		.access(path.join(UPLOAD_DIR, resourcePath))
 		.then(() => true)
@@ -20,6 +20,7 @@ function nameIsValid(name: string): boolean {
 	for (const character of illegalCharacters) {
 		if (name.includes(character)) return false;
 	}
+	if (name.endsWith(" ")) return false; // Weird things happen when folder name ends with a space - also no real use for that
 	return true;
 }
 
@@ -135,8 +136,6 @@ router.post("/createResource", async (req: Request, res: Response): Promise<void
 	const resourcePath: string = path.join(currentPath, req.body.resourceName);
 	const responseCode: number =
 		resourceType === "folder" ? await createFolder(resourcePath) : await createFile(resourcePath);
-
-	console.log("Creating response code: " + responseCode);
 
 	if (responseCode === RESPONSE_CODES.OK) {
 		res.redirect("/tree/" + currentPath);
