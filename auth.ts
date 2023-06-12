@@ -73,9 +73,6 @@ router.use((req: Request, res: Response, next: Function): void => {
 	// Or it's a request to /create, /rename etc. - make sure the currentPath, on which these actions are executed, matches /username/*
 	const pathToCheck: string = req.url.startsWith("/tree") ? validatePath(req.url) : currentPath;
 	if (!pathToCheck.startsWith(`${username}`)) {
-		console.log(`User ${username} tried to access ${pathToCheck} which is not their own.`);
-		console.log("Full url: " + req.url);
-		console.log("Validated: " + validatePath(req.url));
 		// This will return UNATHORIZED whether the resource actually exists or not
 		res.redirect(`/tree/${username}?responseCode=${RESPONSE_CODES.UNATHORIZED}`);
 		return;

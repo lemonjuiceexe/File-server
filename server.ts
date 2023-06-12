@@ -4,6 +4,7 @@ import express, { Express, Request, Response, Router } from "express";
 import { create } from "express-handlebars";
 import path from "path";
 import cookieParser from "cookie-parser";
+import nocache from "nocache";
 // Custom
 import { router as authRouter } from "./auth";
 import mainRouter from "./routes/main";
@@ -94,6 +95,7 @@ app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser());
+app.use(nocache());
 
 // ----Routes----
 app.use("/", authRouter); // Must be first, so every request gets authenticated
