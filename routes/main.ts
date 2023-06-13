@@ -58,8 +58,11 @@ router.get("/tree((/:path)+)?", async (req: Request, res: Response): Promise<voi
 
 	// Handle files
 	if (!(await isFolder(currentPath))) {
+		// Read file content and render the text editor page
+		const fileContent: string = filesystem.readFileSync(path.join(UPLOAD_DIR, currentPath), "utf-8");
 		res.render("text_editor.hbs", {
 			filePath: currentPath,
+			fileContent: fileContent,
 			username: username
 		});
 		return;

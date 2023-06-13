@@ -10,6 +10,7 @@ import { router as authRouter } from "./auth";
 import mainRouter from "./routes/main";
 import { router as createDeleteRouter } from "./routes/create_rename_delete";
 import uploadRouter from "./routes/upload";
+import updateRouter from "./routes/update";
 import registerLoginRouter from "./routes/login_register";
 
 // ----Variables----
@@ -26,11 +27,13 @@ export const RESPONSE_CODES = {
 	// The 403 "Forbidden" actually means "Unauthorized".
 	UNATHORIZED: 403,
 	NOT_FOUND: 404,
+	NOT_A_TEXT_FILE: 404.1,
 	ALREADY_EXISTS: 409.1,
 	NOT_EMPTY: 409.2,
 	INVALID_NAME: 422,
 	ERROR: 500
 };
+export const IMAGE_EXTENSIONS: string[] = [".png", ".jpg", ".jpeg", ".gif", ".bmp", ".svg"];
 
 export function setCurrentPath(value: string): void {
 	currentPath = value;
@@ -100,10 +103,11 @@ app.use(nocache());
 
 // ----Routes----
 app.use("/", authRouter); // Must be first, so every request gets authenticated
+app.use("/", registerLoginRouter);
 app.use("/", mainRouter);
 app.use("/", createDeleteRouter);
 app.use("/", uploadRouter);
-app.use("/", registerLoginRouter);
+app.use("/", updateRouter);
 
 // ----Server----
 app.listen(PORT, () => {

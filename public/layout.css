@@ -37,7 +37,13 @@ body {
     font-weight: bold;
 }
 
-.filelist, [class $= "editor"] {
+.filelist-wrapper, .text-editor-wrapper {
     grid-column: 2 / 3;
     grid-row: 2 / 3;
+}
+.text-editor {
+    width: calc(100% - 40px);
+    height: 80%;
+    margin: 20px;
+    resize: none;
 }

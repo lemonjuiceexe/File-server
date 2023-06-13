@@ -1,16 +1,43 @@
 {{>header}}
 {{>text_editor_sidebar}}
-<div class="text-editor">
+<div class="text-editor-wrapper">
     <div class="text-editor-header">
         <label for="editor">
             {{filePath}}
         </label>
     </div>
-    <div class="text-editor-content">
-        <textarea id="editor">{{content}}</textarea>
-    </div>
+    <textarea id="editor" class="text-editor">{{fileContent}}</textarea>
+    <button onclick="saveFile()">Save changes</button>
 </div>
 
 <style>
     @import url("/layout.css");
+    textarea {
+        width: 100%;
+        height: 80%;
+    }
 </style>
+<script>
+    function saveFile() {
+        const body = {
+            filePath: "{{filePath}}",
+            fileContent: document.querySelector("#editor").value
+        };
+        fetch("/updateFile", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            keepalive: true,
+            body: JSON.stringify(body)
+        })
+                .then(response => {
+                    if (response.redirected) {
+                        window.location.href = response.url;
+                    } else {
+                        return response.json();
+                    }
+                })
+                .catch(error => console.log(error));
+    }
+</script>
