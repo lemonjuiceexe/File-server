@@ -8,3 +8,9 @@ export interface ISessionToken {
 	token: string;
 	timestamp: number;
 }
+
+export interface ITextFileDefaultContent {
+	html: string;
+	css: string;
+	js: string;
+}

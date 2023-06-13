@@ -3,6 +3,9 @@ import * as filesystemPromises from "fs/promises";
 import path from "path";
 
 import { UPLOAD_DIR, currentPath, RESPONSE_CODES } from "../server";
+import * as tfc from "../default_textfiles_content.json";
+
+const textfileContent = tfc as { [key: string]: string }; // Makes it possible to access the object with a string variable
 
 export const router: Router = express.Router();
 
@@ -64,6 +67,19 @@ async function createFile(filePath: string): Promise<number> {
 			});
 		if (errorCode) return errorCode;
 	}
+
+	const defaultContentExtensions: string[] = Object.keys(textfileContent);
+	const fileExtension: string = filePath.split(".")[filePath.split(".").length - 1].toLowerCase();
+	if (defaultContentExtensions.includes(fileExtension)) {
+		await filesystemPromises
+			.writeFile(path.join(UPLOAD_DIR, filePath), textfileContent[fileExtension])
+			.then(() => console.log("📝 Wrote default content to file: " + filePath))
+			.catch(error => {
+				console.log("🚨 Failed to write default content to file: " + filePath);
+				console.log("Reason: " + error);
+			});
+	}
+
 	return fileExists ? RESPONSE_CODES.ALREADY_EXISTS : RESPONSE_CODES.OK;
 }
 
