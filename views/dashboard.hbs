@@ -1,0 +1,12 @@
+{{>header}}
+{{>dashboard_sidebar}}
+{{>filelist currentPath=currentPath}}
+{{#if statusCode}}
+    <script>
+        alert("{{statusCodeMessage statusCode}}");
+    </script>
+{{/if}}
+
+<style>
+    @import url("/layout.css");
+</style>

@@ -51,15 +51,23 @@ router.get("/tree((/:path)+)?", async (req: Request, res: Response): Promise<voi
 		progressivePath.push("/" + splittedPath.slice(0, i + 1).join("/"));
 	}
 	progressivePath = progressivePath.map((el: string): string => el.replace("//", "/"));
-
-	if (!(await resourceExists(currentPath)) || !(await isFolder(currentPath))) {
+	if (!(await resourceExists(currentPath))) {
 		res.redirect(`/tree/${username}?responseCode=${RESPONSE_CODES.NOT_FOUND}`);
+		return;
+	}
+
+	// Handle files
+	if (!(await isFolder(currentPath))) {
+		res.render("text_editor.hbs", {
+			filePath: currentPath,
+			username: username
+		});
 		return;
 	}
 
 	getFiles(currentPath).then((result: IFiles): void => {
 		const responseCode: number = req.query.responseCode ? parseFloat(req.query.responseCode as string) : 200;
-		res.render("root.hbs", {
+		res.render("dashboard.hbs", {
 			files: result.files,
 			folders: result.folders,
 			currentPath: currentPath,

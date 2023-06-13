@@ -17,7 +17,8 @@
         {{/each}}
         {{#each files}}
             <div class="element file">
-                {{this}}
+                <a class="element-link"
+                   href="{{concatenate "/tree/" @root/currentPath this}}">{{this}}</a>
                 <button class="element-button-rename"
                         onclick="renameResource('{{this}}')">
                     Rn

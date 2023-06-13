@@ -1,0 +1,16 @@
+{{>header}}
+{{>text_editor_sidebar}}
+<div class="text-editor">
+    <div class="text-editor-header">
+        <label for="editor">
+            {{filePath}}
+        </label>
+    </div>
+    <div class="text-editor-content">
+        <textarea id="editor">{{content}}</textarea>
+    </div>
+</div>
+
+<style>
+    @import url("/layout.css");
+</style>
