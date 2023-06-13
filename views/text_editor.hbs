@@ -6,18 +6,69 @@
             {{filePath}}
         </label>
     </div>
-    <textarea id="editor" class="text-editor">{{fileContent}}</textarea>
+    <div class="line-numbers">
+        <div class="line-number"></div>
+        <textarea id="editor" class="text-editor">{{fileContent}}</textarea>
+    </div>
     <button onclick="saveFile()">Save changes</button>
 </div>
 
 <style>
     @import url("/layout.css");
+    :root {
+        --font-size: 15px;
+    }
+    .text-editor-wrapper {
+        font-size: var(--font-size);
+    }
     textarea {
-        width: 100%;
+        width: calc(100% - 40px);
         height: 80%;
+        margin: 0 30px 20px 30px;
+        resize: none;
+        font-size: var(--font-size);
+    }
+    .line-numbers {
+        position: relative;
+    }
+    .line-number {
+        display: block;
+        position: absolute;
+        left: 0;
+        height: var(--font-size);
+        width: 25px;
+        text-align: right;
+        color: black;
+        border-radius: 50%;
+        margin-right: 10px;
     }
 </style>
 <script>
+    window.onload = countLines;
+    document.querySelector("#editor").addEventListener("keyup", event => {
+        // Bind Ctrl + S
+        if (event.ctrlKey && event.key === "s") {
+            event.preventDefault();
+            saveFile();
+        }
+        countLines();
+    });
+    function countLines() {
+        // Count lines and generate line numbers
+        document.querySelectorAll(".line-numbers > *").forEach(el => {
+            if (el.classList.contains("line-number")) el.remove()
+        });
+        const linesNumber = document.querySelector("#editor").value.split("\n").length;
+        document.querySelector("#editor").rows = linesNumber;
+        for (let i = 0; i < linesNumber; i++) {
+            const line = document.createElement("div");
+            line.classList.add("line-number");
+            line.innerText = (i + 1).toString();
+            const lineHeight = document.querySelector("#editor").clientHeight / linesNumber;
+            line.style.top = (i * lineHeight).toString() + "px";
+            document.querySelector(".line-numbers").appendChild(line);
+        }
+    }
     function saveFile() {
         const body = {
             filePath: "{{filePath}}",
