@@ -63,6 +63,7 @@ router.get("/tree((/:path)+)?", async (req: Request, res: Response): Promise<voi
 		res.render("text_editor.hbs", {
 			filePath: currentPath,
 			fileContent: fileContent,
+			parentDirectory: path.dirname(currentPath),
 			username: username
 		});
 		return;
