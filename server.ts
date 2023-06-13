@@ -38,13 +38,11 @@ export function setCurrentPath(value: string): void {
 // Accepts full url, returns path after /tree/
 export function validatePath(pathToValidate: string): string {
 	if (pathToValidate === "/") return "";
-	let validatedPath: string = (
-		decodeURIComponent(pathToValidate + "/")
-			.split("/tree/")[1] // Path after /tree/
-			.split("?")[0] + // Don't include query parameters
-		"/"
-	) // Add trailing slash
+	let validatedPath: string = decodeURIComponent(pathToValidate + "/")
+		.split("/tree/")[1] // Path after /tree/
+		.split("?")[0] // Don't include query parameters // Add trailing slash
 		.replace(/\/\//g, "/"); // Replace all double slashes with single slashes
+	if (!validatedPath.endsWith("/")) validatedPath += "/"; // Add trailing slash
 	if (validatedPath === "/") validatedPath = "";
 
 	return validatedPath;
