@@ -1,9 +1,9 @@
 import express, { Express, Request, Response, Router } from "express";
 import { webcrypto } from "crypto";
-import { ISessionToken } from "./types";
 
+import { ISessionToken } from "./types";
 import { currentPath, RESPONSE_CODES, setCurrentPath, validatePath } from "./server";
-import path from "path";
+import { getUsersTextEditorPreferences } from "./database";
 
 export const router: Router = express.Router();
 
@@ -72,8 +72,8 @@ router.use((req: Request, res: Response, next: Function): void => {
 	// Or it's a request to /create, /rename etc. - make sure the currentPath, on which these actions are executed, matches /username/*
 	const pathToCheck: string = req.url.startsWith("/tree") ? validatePath(req.url) : currentPath;
 	if (!pathToCheck.startsWith(`${username}`)) {
-		// This will return UNATHORISED whether the resource actually exists or not
-		res.redirect(`/tree/${username}?responseCode=${RESPONSE_CODES.UNATHORISED}`);
+		// This will return UNAUTHORISED whether the resource actually exists or not
+		res.redirect(`/tree/${username}?responseCode=${RESPONSE_CODES.UNAUTHORISED}`);
 		return;
 	}
 

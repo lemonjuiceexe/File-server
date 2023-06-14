@@ -4,6 +4,7 @@ import * as crypto from "crypto-js";
 import { createFolder } from "./create_rename_delete";
 import { addUser, authenticateUser } from "../database";
 import { generateSessionToken, deleteUserSessionTokens, TOKEN_LIFETIME } from "../auth";
+import {RESPONSE_CODES} from "../server";
 
 const router: Router = express.Router();
 
@@ -41,7 +42,7 @@ router.post("/register", async (req: Request, res: Response): Promise<void> => {
 	const password: string = crypto.SHA256(req.body.password).toString();
 	const responseCode: number = await addUser(login, password);
 
-	if (responseCode === 0) {
+	if (responseCode === RESPONSE_CODES.OK) {
 		// Create directory for user
 		await createFolder(login);
 		res.redirect("/login");
@@ -54,7 +55,7 @@ router.post("/login", async (req: Request, res: Response): Promise<void> => {
 	const password: string = crypto.SHA256(req.body.password).toString();
 	const responseCode: number = await authenticateUser(username, password);
 
-	if (responseCode === 0) {
+	if (responseCode === RESPONSE_CODES.OK) {
 		// Remove old session tokens for this user
 		// - https://developer.mozilla.org/en-US/docs/Web/Security/Types_of_attacks#session_fixation
 		deleteUserSessionTokens(username);

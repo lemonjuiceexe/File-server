@@ -1,6 +1,14 @@
 <aside class="sidebar">
     <a href="/tree/{{parentDirectory}}">Go back</a>
-    <p>theme settings</p>
-    <p>lorem ipsum</p>
-    <p>lorem ipsum</p>
+    <form action="/editPreferences" method="POST">
+        <label for="color-theme-select">Color theme</label>
+        <select id="color-theme-select" name="color-theme">
+            {{#each colorThemesNames}}
+                <option value="{{this}}">{{this}}</option>
+            {{/each}}
+        </select> <br>
+        <label for="text-size-select">Text size</label>
+        <input id="text-size-select" name="text-size" type="number" min="6" max="40" value="16">
+        <input type="submit" value="Apply">
+    </form>
 </aside>

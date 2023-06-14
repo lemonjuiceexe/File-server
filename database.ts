@@ -1,6 +1,7 @@
-import { MongoClient, Db, Collection, ObjectId } from "mongodb";
+import { MongoClient, Db, Collection } from "mongodb";
 
 import { ITextEditorPreferences } from "./types";
+import {RESPONSE_CODES} from "./server";
 
 async function connectToDatabase(databaseName: string): Promise<Db | null> {
 	try {
@@ -36,11 +37,11 @@ async function connectToUsers(): Promise<Collection | null> {
 export async function addUser(username: string, passwordHash: string): Promise<number> {
 	// Connect to db
 	const collection: Collection | null = await connectToUsers();
-	if (!collection) return 500;
+	if (!collection) return RESPONSE_CODES.ERROR;
 
 	// Check if user doesn't already exist
 	const userExists: boolean = (await collection.findOne({ username: username })) !== null;
-	if (userExists) return 409.1;
+	if (userExists) return RESPONSE_CODES.ALREADY_EXISTS;
 
 	// Add user
 	await collection.insertOne({
@@ -49,20 +50,38 @@ export async function addUser(username: string, passwordHash: string): Promise<n
 		textEditorPreferences: {
 			backgroundColor: "#ffffff",
 			textColor: "#000000",
-			fontSize: 16
+			textSize: 16
 		}
 	});
 	console.log(`👤 User: ${username} registered successfully`);
-	return 0;
+	return RESPONSE_CODES.OK;
 }
 export async function authenticateUser(username: string, passwordHash: string): Promise<number> {
 	// Connect to db
 	const collection: Collection | null = await connectToUsers();
-	if (!collection) return 500;
+	if (!collection) return RESPONSE_CODES.ERROR;
 
 	// Check if user exists
 	const goodCredentials: boolean =
 		(await collection.findOne({ username: username, password: passwordHash })) !== null;
 	console.log(`🔑 User: ${username}${!goodCredentials ? " not" : ""} authenticated successfully`);
-	return goodCredentials ? 0 : 401.1;
+	return goodCredentials ? RESPONSE_CODES.OK : RESPONSE_CODES.INVALID_CREDENTIALS;
+}
+
+export async function getUsersTextEditorPreferences(username: string): Promise<ITextEditorPreferences | number>{
+	const collection: Collection | null = await connectToUsers();
+	if(!collection) return RESPONSE_CODES.ERROR;
+
+	const user = await collection.findOne({username: username});
+	if(!user) return RESPONSE_CODES.NOT_FOUND;
+
+	return user.textEditorPreferences;
+}
+export async function setUsersTextEditorPreferences(username: string, preferences: ITextEditorPreferences): Promise<number>{
+	const collection: Collection | null = await connectToUsers();
+	if(!collection) return RESPONSE_CODES.ERROR;
+	if(! (await collection.findOne({username: username}))) return RESPONSE_CODES.NOT_FOUND;
+	await collection.updateOne({username: username}, {$set: {textEditorPreferences: preferences}});
+	console.log(`🎨 User: ${username} theme updated successfully`)
+	return RESPONSE_CODES.OK;
 }

@@ -3,9 +3,12 @@ import * as filesystem from "fs";
 import * as filesystemPromises from "fs/promises";
 import path from "path";
 
-import { IFiles } from "../types";
+import {IFiles, ITextEditorPreferences} from "../types";
 import { UPLOAD_DIR, RESPONSE_CODES, currentPath, setCurrentPath, validatePath } from "../server";
 import { resourceExists, isFolder } from "./create_rename_delete";
+import { getUsersTextEditorPreferences } from "../database";
+import * as colorThemes from "../color_themes.json";
+// const colorThemes = cth;
 
 const router: Router = express.Router();
 
@@ -60,11 +63,20 @@ router.get("/tree((/:path)+)?", async (req: Request, res: Response): Promise<voi
 	if (!(await isFolder(currentPath))) {
 		// Read file content and render the text editor page
 		const fileContent: string = filesystem.readFileSync(path.join(UPLOAD_DIR, currentPath), "utf-8");
+		const userPreferences: ITextEditorPreferences | number = await getUsersTextEditorPreferences(username);
+		if (typeof userPreferences === "number") {
+			res.redirect(`/tree/${username}?responseCode=${userPreferences}`);
+			return;
+		}
 		res.render("text_editor.hbs", {
 			filePath: currentPath,
 			fileContent: fileContent,
 			parentDirectory: path.dirname(currentPath),
-			username: username
+			username: username,
+			textSize: userPreferences.textSize,
+			textColor: userPreferences.textColor,
+			backgroundColor: userPreferences.backgroundColor,
+			colorThemesNames: Object.keys(colorThemes)
 		});
 		return;
 	}

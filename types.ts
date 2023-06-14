@@ -12,5 +12,5 @@ export interface ISessionToken {
 export interface ITextEditorPreferences {
 	backgroundColor: string;
 	textColor: string;
-	fontSize: number;
+	textSize: number;
 }

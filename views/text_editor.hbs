@@ -14,11 +14,11 @@
 </div>
 
 <style>
-    @import url("/layout.css");
-    :root {
-        --font-size: 15px;
-    }
+    @import url("/style/layout.css");
     .text-editor-wrapper {
+        --font-size: {{textSize}}px;
+        --background-color: {{backgroundColor}};
+        --text-color: {{textColor}};
         font-size: var(--font-size);
     }
     textarea {
@@ -27,6 +27,8 @@
         margin: 0 30px 20px 30px;
         resize: none;
         font-size: var(--font-size);
+        background-color: var(--background-color);
+        color: var(--text-color);
     }
     .line-numbers {
         position: relative;
@@ -43,7 +45,8 @@
         margin-right: 10px;
     }
 </style>
-<script>
+
+<script defer>
     window.onload = countLines;
     document.querySelector("#editor").addEventListener("keyup", event => {
         // Bind Ctrl + S
@@ -91,4 +94,5 @@
                 })
                 .catch(error => console.log(error));
     }
+
 </script>

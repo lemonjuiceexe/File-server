@@ -10,7 +10,8 @@ import { router as authRouter } from "./auth";
 import mainRouter from "./routes/main";
 import { router as createDeleteRouter } from "./routes/create_rename_delete";
 import uploadRouter from "./routes/upload";
-import updateRouter from "./routes/update";
+import updateRouter from "./routes/update_file";
+import editPreferencesRouter from "./routes/edit_preferences";
 import registerLoginRouter from "./routes/login_register";
 
 // ----Variables----
@@ -25,7 +26,7 @@ export const RESPONSE_CODES = {
 	INVALID_CREDENTIALS: 401.1,
 	// In the HTTP standard, the 401 is defined as "Unauthorized", it, however, semantically means "Unauthenticated".
 	// The 403 "Forbidden" actually means "Unauthorized". And this is my own standard sooo 403 Unathorized.
-	UNATHORISED: 403,
+	UNAUTHORISED: 403,
 	NOT_FOUND: 404,
 	NOT_A_TEXT_FILE: 404.1,
 	ALREADY_EXISTS: 409.1,
@@ -70,7 +71,7 @@ app.engine(
 				switch (statusCode) {
 					case RESPONSE_CODES.UNAUTHENTICATED:
 						return "You are not logged in or your session has expired. Please log in again.";
-					case RESPONSE_CODES.UNATHORISED:
+					case RESPONSE_CODES.UNAUTHORISED:
 						return "You are not authorized to access this resource.";
 					case RESPONSE_CODES.INVALID_CREDENTIALS:
 						return "Invalid username or password.";
@@ -108,6 +109,7 @@ app.use("/", mainRouter);
 app.use("/", createDeleteRouter);
 app.use("/", uploadRouter);
 app.use("/", updateRouter);
+app.use("/", editPreferencesRouter);
 
 // ----Server----
 app.listen(PORT, () => {
