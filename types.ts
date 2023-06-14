@@ -9,8 +9,8 @@ export interface ISessionToken {
 	timestamp: number;
 }
 
-export interface ITextFileDefaultContent {
-	html: string;
-	css: string;
-	js: string;
+export interface ITextEditorPreferences {
+	backgroundColor: string;
+	textColor: string;
+	fontSize: number;
 }

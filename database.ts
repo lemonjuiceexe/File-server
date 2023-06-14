@@ -1,5 +1,7 @@
 import { MongoClient, Db, Collection, ObjectId } from "mongodb";
 
+import { ITextEditorPreferences } from "./types";
+
 async function connectToDatabase(databaseName: string): Promise<Db | null> {
 	try {
 		const client: MongoClient = new MongoClient("mongodb://localhost:27017/");
@@ -41,7 +43,15 @@ export async function addUser(username: string, passwordHash: string): Promise<n
 	if (userExists) return 409.1;
 
 	// Add user
-	await collection.insertOne({ username: username, password: passwordHash });
+	await collection.insertOne({
+		username: username,
+		password: passwordHash,
+		textEditorPreferences: {
+			backgroundColor: "#ffffff",
+			textColor: "#000000",
+			fontSize: 16
+		}
+	});
 	console.log(`👤 User: ${username} registered successfully`);
 	return 0;
 }

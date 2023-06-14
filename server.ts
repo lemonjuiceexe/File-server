@@ -24,8 +24,8 @@ export const RESPONSE_CODES = {
 	UNAUTHENTICATED: 401,
 	INVALID_CREDENTIALS: 401.1,
 	// In the HTTP standard, the 401 is defined as "Unauthorized", it, however, semantically means "Unauthenticated".
-	// The 403 "Forbidden" actually means "Unauthorized".
-	UNATHORIZED: 403,
+	// The 403 "Forbidden" actually means "Unauthorized". And this is my own standard sooo 403 Unathorized.
+	UNATHORISED: 403,
 	NOT_FOUND: 404,
 	NOT_A_TEXT_FILE: 404.1,
 	ALREADY_EXISTS: 409.1,
@@ -70,7 +70,7 @@ app.engine(
 				switch (statusCode) {
 					case RESPONSE_CODES.UNAUTHENTICATED:
 						return "You are not logged in or your session has expired. Please log in again.";
-					case RESPONSE_CODES.UNATHORIZED:
+					case RESPONSE_CODES.UNATHORISED:
 						return "You are not authorized to access this resource.";
 					case RESPONSE_CODES.INVALID_CREDENTIALS:
 						return "Invalid username or password.";
