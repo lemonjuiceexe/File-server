@@ -88,7 +88,7 @@ router.get("/tree((/:path)+)?", async (req: Request, res: Response): Promise<voi
 				imagePath: `/${currentPath.slice(0, currentPath.length - 1)}`,
 				filters: IMAGE_FILTERS,
 				username: username
-			})
+			});
 		}
 		return;
 	}

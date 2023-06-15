@@ -3,7 +3,7 @@
     <button>Filters</button>
     <div class="filters-wrapper">
         {{#each filters}}
-            <button class="filter" onclick="preview('{{this}}')">{{this}}
+            <button class="filter" onclick="previewFilter('{{this}}')">{{this}}
                 <img class="filter-img" src="{{@root/imagePath}}" alt="{{@root/imagePath}}" style="{{cssFromFilter this}}">
             </button>
         {{/each}}

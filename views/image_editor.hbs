@@ -4,6 +4,7 @@
     <p>Lorem ipsum dolor sit amet.</p>
     <img src="{{imagePath}}" alt="{{imagePath}}" class="image-editor">
     <button onclick="filter()">Save</button>
+    <a href="{{imagePath}}" target="_blank">Preview image</a>
 </div>
 
 <style>
@@ -15,11 +16,10 @@
 
 <script>
     let selectedFilter = 'none';
-    function preview(filterName){
+    function previewFilter(filterName){
 		document.querySelector('.image-editor').style = cssFromFilter(filterName);
         selectedFilter = filterName;
     }
-
     function filter(){
         fetch("/filterImage", {
 			            method: "POST",
