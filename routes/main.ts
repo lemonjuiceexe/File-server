@@ -9,7 +9,6 @@ import { resourceExists, isFolder } from "./create_rename_delete";
 import { isTextFile } from "./update_file";
 import { getUsersTextEditorPreferences } from "../database";
 import * as colorThemes from "../color_themes.json";
-// const colorThemes = cth;
 
 const router: Router = express.Router();
 
@@ -67,6 +66,19 @@ router.get("/tree((/:path)+)?", async (req: Request, res: Response): Promise<voi
 			// Read file content and render the text editor page
 			const fileContent: string = filesystem.readFileSync(path.join(UPLOAD_DIR, currentPath), "utf-8");
 			const userPreferences: ITextEditorPreferences | number = await getUsersTextEditorPreferences(username);
+			// Check for the name of theme that corresponds with the user's preferences
+			let themeMatchingPreferences: string = "default";
+			for (const theme of Object.keys(colorThemes)) {
+				if (
+					//@ts-ignore
+					colorThemes[theme].backgroundColor === userPreferences.backgroundColor &&
+					//@ts-ignore
+					colorThemes[theme].textColor === userPreferences.textColor
+				) {
+					themeMatchingPreferences = theme;
+					break;
+				}
+			}
 			if (typeof userPreferences === "number") {
 				res.redirect(`/tree/${username}?responseCode=${userPreferences}`);
 				return;
@@ -79,7 +91,8 @@ router.get("/tree((/:path)+)?", async (req: Request, res: Response): Promise<voi
 				textSize: userPreferences.textSize,
 				textColor: userPreferences.textColor,
 				backgroundColor: userPreferences.backgroundColor,
-				colorThemesNames: Object.keys(colorThemes)
+				colorThemesNames: Object.keys(colorThemes),
+				selectedTheme: themeMatchingPreferences
 			});
 		} else {
 			res.render("image_editor.hbs", {

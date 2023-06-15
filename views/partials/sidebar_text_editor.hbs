@@ -2,13 +2,17 @@
     <a href="/tree/{{parentDirectory}}">Go back</a>
     <form action="/editPreferences" method="POST">
         <label for="color-theme-select">Color theme</label>
-        <select id="color-theme-select" name="color-theme">
+        <p>{{selectedTheme}}</p>
+        <select id="color-theme-select" name="color-theme" >
             {{#each colorThemesNames}}
-                <option value="{{this}}">{{this}}</option>
+                <option {{#if (eq @root/selectedTheme this)}}selected{{/if}}
+                        value="{{this}}">
+                    {{this}}
+                </option>
             {{/each}}
         </select> <br>
         <label for="text-size-select">Text size</label>
-        <input id="text-size-select" name="text-size" type="number" min="6" max="40" value="16">
+        <input id="text-size-select" name="text-size" type="number" min="6" max="40" value="{{textSize}}">
         <input type="submit" value="Apply">
     </form>
 </aside>

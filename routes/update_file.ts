@@ -10,7 +10,7 @@ export const router: Router = express.Router();
 
 export function isTextFile(filePath: string): boolean {
 	if (!resourceExists(filePath)) return false;
-	return !IMAGE_EXTENSIONS.includes(path.extname(filePath));
+	return !IMAGE_EXTENSIONS.includes(path.extname(filePath).toLowerCase());
 }
 async function updateTextFile(filePath: string, fileContent: string): Promise<number> {
 	if (isTextFile(filePath)) {
@@ -29,10 +29,10 @@ async function updateTextFile(filePath: string, fileContent: string): Promise<nu
 	}
 }
 
-async function filterImage(imagePath: string, filterName: string): Promise<number>{
+async function filterImage(imagePath: string, filterName: string): Promise<number> {
 	Jimp.read(path.join(UPLOAD_DIR, imagePath))
 		.then((image: Jimp) => {
-			switch(filterName){
+			switch (filterName) {
 				case "blur":
 					image.blur(10);
 					break;
@@ -73,7 +73,7 @@ router.post("/filterImage", async (req: Request, res: Response): Promise<void> =
 	const filter: string = req.body.filterName;
 	const responseCode: number = await filterImage(currentPath, filter);
 
-	if(responseCode === RESPONSE_CODES.OK){
+	if (responseCode === RESPONSE_CODES.OK) {
 		res.redirect("/tree/" + currentPath);
 		return;
 	}

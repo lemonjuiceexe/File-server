@@ -34,13 +34,8 @@ export const RESPONSE_CODES = {
 	INVALID_NAME: 422,
 	ERROR: 500
 };
-export const IMAGE_EXTENSIONS: string[] = [".png", ".jpg", ".jpeg", ".gif", ".bmp", ".svg"];
-export const IMAGE_FILTERS: string[] = [
-	"none",
-	"greyscale",
-	"sepia",
-	"blur"
-]
+export const IMAGE_EXTENSIONS: string[] = [".png", ".jpg", ".jpeg", ".gif", ".bmp", ".tiff"];
+export const IMAGE_FILTERS: string[] = ["none", "greyscale", "sepia", "blur"];
 
 export function setCurrentPath(value: string): void {
 	currentPath = value;
@@ -113,8 +108,6 @@ app.engine(
 			}
 		}
 	}).engine
-
-
 );
 app.set("view engine", "hbs");
 app.set("views", "./views");
