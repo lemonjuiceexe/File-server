@@ -1,23 +1,22 @@
 {{>header}}
 {{>sidebar_image_editor}}
 <div class="image-editor-wrapper">
-    <p>{{filePath}}</p>
-    <img src="{{imagePath}}" alt="{{imagePath}}" class="image-editor">
-    <button onclick="filter()">Save</button>
-    <a href="{{imagePath}}" target="_blank">Preview image</a>
+    <p class="pathbar-wrapper">{{filePath}}</p>
+    <img src="{{imagePath}}" alt="{{imagePath}}" class="image-edited">
+    <div class="form-group">
+        <button onclick="filter()" class="button-element image-save">Save</button>
+        <a href="{{imagePath}}" target="_blank" class="button-element">Preview image</a>
+    </div>
 </div>
 
 <style>
     @import url("/style/image_editor.css");
-    .image-editor{
-        max-width: 80%;
-    }
 </style>
 
 <script>
 	let filtersMenuCollapsed = true;
     function previewFilter(filterName){
-		document.querySelector('.image-editor').style = cssFromFilter(filterName);
+		document.querySelector('.image-edited').style = cssFromFilter(filterName);
         selectedFilter = filterName;
     }
     function filter(){

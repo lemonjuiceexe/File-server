@@ -8,9 +8,6 @@
 	background-color: var(--foreground);
 	color: var(--dark);
 }
-.pathbar-wrapper {
-	padding: 20px;
-}
 .pathbar-arrow {
 	color: var(--accent);
 }

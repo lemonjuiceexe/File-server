@@ -44,3 +44,6 @@ body {
 	grid-column: 2 / 3;
 	grid-row: 2 / 3;
 }
+.pathbar-wrapper {
+	padding: 20px;
+}

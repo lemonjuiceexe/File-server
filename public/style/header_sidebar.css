@@ -6,6 +6,9 @@
 .header-username {
 	color: var(--accent);
 }
+a.gh-link {
+	color: var(--accent);
+}
 .copyright {
 	display: block;
 	font-weight: normal;
