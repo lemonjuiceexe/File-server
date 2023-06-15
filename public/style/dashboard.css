@@ -1,0 +1,180 @@
+@import url("./reset.css");
+@import url("./theme.css");
+@import url("./layout.css");
+
+/* ---- HEADER ---- */
+.header {
+	background-color: var(--dark);
+	color: var(--light);
+}
+.header-username {
+	color: var(--accent);
+}
+.copyright {
+	display: block;
+	font-weight: normal;
+}
+
+/* ---- SIDEBAR ---- */
+.sidebar {
+	background-color: var(--light);
+	color: var(--dark);
+	display: flex;
+	flex-flow: column nowrap;
+	justify-content: center;
+	align-items: center;
+	padding-right: 3vw;
+}
+.sidebar > * {
+	margin: 30px 0;
+}
+.sidebar form,
+.create-resource-wrapper {
+	border: 2px solid var(--dark);
+	border-radius: 5px;
+}
+fieldset {
+	width: 100%;
+}
+legend {
+	text-align: left;
+	padding: 10px;
+}
+.create-resource-button,
+.upload-label,
+.upload-submit {
+	display: block;
+	background-color: var(--dark);
+	border: none;
+	border-radius: 5px;
+	margin: 20px 10px;
+	padding: 10px 15px;
+	width: 90%;
+	color: white;
+	font-weight: bold;
+	cursor: pointer;
+	font-size: 16px;
+	font-family: "DM Mono", monospace;
+}
+.upload {
+	display: none;
+}
+
+/* ---- FILELIST ---- */
+.filelist-wrapper {
+	background-color: var(--foreground);
+	color: var(--dark);
+}
+.pathbar-wrapper {
+	padding: 20px;
+}
+.pathbar-arrow {
+	color: var(--accent);
+}
+
+.elements {
+	overflow-x: hidden;
+	display: flex;
+	flex-flow: row wrap;
+	justify-content: flex-start;
+	align-items: center;
+}
+.elements::after {
+	content: "";
+	flex: auto;
+}
+.element {
+	position: relative;
+	display: inline-flex;
+	align-items: flex-end;
+	width: 20%;
+	max-width: 150px;
+	aspect-ratio: 1;
+	margin: 20px;
+	background-color: var(--light);
+	border-radius: 13px;
+}
+.file {
+	border: 5px solid var(--accent);
+}
+.folder {
+	border: 5px solid var(--dark);
+}
+
+.element-link {
+	width: 100%;
+	padding-top: 3em;
+	margin: 0 0 1em 1em;
+	word-break: break-all;
+}
+[class^="element-button"] {
+	position: absolute;
+	width: 30px;
+	height: 30px;
+	border: none;
+	cursor: pointer;
+}
+.element-button-rename {
+	left: 5px;
+	top: 5px;
+	background-color: var(--foreground);
+	border-radius: 5px;
+}
+.element-button-delete {
+	right: 5px;
+	top: 5px;
+	background-color: var(--accent-2);
+	border-radius: 50%;
+	color: white;
+}
+
+/* ---- DIALOG ----*/
+dialog {
+	position: fixed;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	padding: 20px;
+	border: 4px solid var(--dark);
+}
+.dialog-title {
+	display: block;
+	margin: 10px 0;
+}
+.dialog-input {
+	display: block;
+	width: 100%;
+	margin: 10px 0;
+	padding: 10px 15px;
+	border: none;
+	outline: none;
+	border-radius: 5px;
+	background-color: var(--light);
+	color: var(--dark);
+	font-weight: bold;
+	font-size: 16px;
+	font-family: "DM Mono", monospace;
+}
+.dialog-input:focus {
+	outline: 2px solid var(--accent);
+}
+.dialog-button-wrapper {
+	width: 100%;
+	display: flex;
+	flex-flow: row nowrap;
+	justify-content: space-between;
+	align-items: center;
+}
+.dialog-button {
+	display: inline-block;
+	margin: 10px 0;
+	padding: 10px 15px;
+	border: none;
+	border-radius: 5px;
+	background-color: var(--dark);
+	color: white;
+	font-weight: bold;
+	cursor: pointer;
+	font-size: 16px;
+	font-family: "DM Mono", monospace;
+}

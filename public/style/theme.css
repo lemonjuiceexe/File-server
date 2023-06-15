@@ -1,0 +1,12 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono&display=swap');
+:root{
+    --black: #000000;
+    --dark: #14213D;
+    --accent: #FCA311;
+    --accent-2: #C12E3D;
+    --light: #efe8e8;
+    --foreground: #FFFFFF;
+}
+body{
+    font-family: 'DM Mono', monospace;
+}

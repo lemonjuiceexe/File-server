@@ -7,7 +7,7 @@ import { getUsersTextEditorPreferences } from "./database";
 
 export const router: Router = express.Router();
 
-export const TOKEN_LIFETIME: number = 1000 * 60 * 5;
+export const TOKEN_LIFETIME: number = 1000 * 60 * 60;
 let currentSessionTokens: ISessionToken[] = [];
 
 export function generateSessionToken(username: string): string {

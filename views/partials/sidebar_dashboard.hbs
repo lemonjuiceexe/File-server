@@ -1,20 +1,28 @@
 <aside class="sidebar">
-    <button onclick="openDialogHandler('folder')">New folder</button>
-    <button onclick="openDialogHandler('file')">New file</button>
-    <div>
+    <fieldset>
+        <legend>Create new resource</legend>
+        <div class="create-resource-wrapper">
+            <button class="create-resource-button" onclick="openDialogHandler('folder')">New folder</button>
+            <button class="create-resource-button" onclick="openDialogHandler('file')">New file</button>
+        </div>
+    </fieldset>
+    <fieldset>
+        <legend>Upload files</legend>
         <form method="POST" action="/upload" enctype="multipart/form-data">
-            <label for="upload">Upload</label>
-            <input id="upload" type="file" name="files" multiple>
-            <button type="submit">Prześlij</button>
+            <label for="upload" class="upload-label">Upload files</label>
+            <input class="upload" id="upload" type="file" name="files" multiple>
+            <button type="submit" class="upload-submit">Submit files</button>
         </form>
-    </div>
+    </fieldset>
     <dialog id="create-dialog">
         <label for="dialog-name-input" class="dialog-title">
             Pora na nazwanie naszego nowego folderu w {{currentPath}}!
         </label>
-        <input type="text" id="dialog-name-input">
-        <button onclick="submitDialogHandler()" id="submit-dialog">Create</button>
-        <button onclick="cancelDialogHandler()">Cancel</button>
+        <input class="dialog-input" type="text" id="dialog-name-input">
+        <div class="dialog-button-wrapper">
+            <button class="dialog-button" onclick="submitDialogHandler()" id="submit-dialog">Create</button>
+            <button class="dialog-button" onclick="cancelDialogHandler()">Cancel</button>
+        </div>
     </dialog>
 </aside>
 
@@ -86,18 +94,3 @@
         }
     }
 </script>
-
-<style>
-    dialog {
-        position: fixed;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%);
-        padding: 20px;
-    }
-
-    .dialog-title {
-        display: block;
-        margin: 10px 0;
-    }
-</style>
