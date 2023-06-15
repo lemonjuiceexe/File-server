@@ -2,6 +2,7 @@ body {
 	width: 100vw;
 	height: 100vh;
 	overflow-x: hidden;
+	overflow-y: hidden;
 	display: grid;
 	grid-template-columns: 1fr 5fr;
 	grid-template-rows: 1fr 9fr;

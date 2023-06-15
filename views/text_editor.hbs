@@ -14,38 +14,42 @@
 </div>
 
 <style>
-    @import url("/style/layout.css");
-    .text-editor-wrapper {
-        --font-size: {{textSize}}px;
-        --background-color: {{backgroundColor}};
-        --text-color: {{textColor}};
-        font-size: var(--font-size);
-    }
-    textarea {
-        width: calc(100% - 40px);
-        height: 80%;
-        margin: 0 30px 20px 30px;
-        resize: none;
-        overflow-y: hidden;
-        font-size: var(--font-size);
-        background-color: var(--background-color);
-        color: var(--text-color);
-    }
-    .line-numbers {
-        position: relative;
-    }
-    .line-number {
-        display: block;
-        position: absolute;
-        left: 0;
-        height: var(--font-size);
-        width: 25px;
-        text-align: right;
-        color: black;
-        border-radius: 50%;
-        margin-right: 10px;
-    }
+    @import url("/style/text_editor.css");
 </style>
+
+<!--<style>-->
+<!--    @import url("/style/layout.css");-->
+<!--    .text-editor-wrapper {-->
+<!--        --font-size: {{textSize}}px;-->
+<!--        --background-color: {{backgroundColor}};-->
+<!--        --text-color: {{textColor}};-->
+<!--        font-size: var(--font-size);-->
+<!--    }-->
+<!--    textarea {-->
+<!--        width: calc(100% - 40px);-->
+<!--        height: 80%;-->
+<!--        margin: 0 30px 20px 30px;-->
+<!--        resize: none;-->
+<!--        overflow-y: hidden;-->
+<!--        font-size: var(--font-size);-->
+<!--        background-color: var(--background-color);-->
+<!--        color: var(--text-color);-->
+<!--    }-->
+<!--    .line-numbers {-->
+<!--        position: relative;-->
+<!--    }-->
+<!--    .line-number {-->
+<!--        display: block;-->
+<!--        position: absolute;-->
+<!--        left: 0;-->
+<!--        height: var(--font-size);-->
+<!--        width: 25px;-->
+<!--        text-align: right;-->
+<!--        color: black;-->
+<!--        border-radius: 50%;-->
+<!--        margin-right: 10px;-->
+<!--    }-->
+<!--</style>-->
 
 <script defer>
     window.onload = countLines;

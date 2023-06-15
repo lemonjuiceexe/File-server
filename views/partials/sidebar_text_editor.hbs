@@ -1,18 +1,27 @@
 <aside class="sidebar">
     <a href="/tree/{{parentDirectory}}">Go back</a>
-    <form action="/editPreferences" method="POST">
-        <label for="color-theme-select">Color theme</label>
-        <p>{{selectedTheme}}</p>
-        <select id="color-theme-select" name="color-theme" >
-            {{#each colorThemesNames}}
-                <option {{#if (eq @root/selectedTheme this)}}selected{{/if}}
-                        value="{{this}}">
-                    {{this}}
-                </option>
-            {{/each}}
-        </select> <br>
-        <label for="text-size-select">Text size</label>
-        <input id="text-size-select" name="text-size" type="number" min="6" max="40" value="{{textSize}}">
-        <input type="submit" value="Apply">
-    </form>
+    <fieldset>
+        <legend>Preferences</legend>
+        <form action="/editPreferences" method="POST">
+            <div class="form-group">
+                <label for="color-theme-select">Color theme</label>
+                <select class="sidebar-input" id="color-theme-select" name="color-theme">
+                    {{#each colorThemesNames}}
+                        <option {{#if (eq @root/selectedTheme this)}}selected{{/if}}
+                                value="{{this}}">
+                            {{this}}
+                        </option>
+                    {{/each}}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="text-size-select">Text size</label>
+                <input class="sidebar-input" id="text-size-select" name="text-size" type="number" min="6" max="40" value="{{textSize}}">
+
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Apply">
+            </div>
+        </form>
+    </fieldset>
 </aside>

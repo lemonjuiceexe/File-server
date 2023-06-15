@@ -1,0 +1,39 @@
+@import url("./reset.css");
+@import url("./theme.css");
+@import url("./layout.css");
+@import url("./header_sidebar.css");
+
+.filters-wrapper {
+	overflow-x: hidden;
+	overflow-y: scroll;
+	min-height: fit-content;
+	height: 400px;
+	padding: 0 10px;
+	/*max-width: 20vw;*/
+	transition: height 500ms ease;
+}
+filters-wrapper::-webkit-scrollbar {
+	width: 10px;
+}
+.filters-wrapper.collapsed {
+	height: 0;
+}
+.filter-collapse-button > span {
+	display: block;
+	transform: rotate(90deg);
+}
+.filter {
+	background-color: transparent;
+	border: none;
+	margin: 20px 0;
+	cursor: pointer;
+}
+.filter-description {
+	position: relative;
+	bottom: 5px;
+	color: black;
+}
+.filter-img {
+	max-width: 95%;
+	max-height: 200px;
+}

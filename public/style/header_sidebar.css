@@ -1,0 +1,89 @@
+/* ---- HEADER ---- */
+.header {
+	background-color: var(--dark);
+	color: var(--light);
+}
+.header-username {
+	color: var(--accent);
+}
+.copyright {
+	display: block;
+	font-weight: normal;
+}
+
+/* ---- SIDEBAR ---- */
+.sidebar {
+	background-color: var(--light);
+	color: var(--dark);
+	display: flex;
+	flex-flow: column nowrap;
+	justify-content: center;
+	align-items: center;
+	/*padding-right: 3vw;*/
+}
+.sidebar > * {
+	margin: 30px 0;
+}
+fieldset {
+	width: 95%;
+	border: 2px solid var(--dark);
+	border-radius: 5px;
+}
+legend {
+	text-align: left;
+	padding: 10px;
+	width: fit-content;
+}
+.form-group {
+	margin: 10px 0;
+}
+.create-resource-button,
+.upload-label,
+input[type="submit"],
+button {
+	display: block;
+	background-color: var(--dark);
+	border: none;
+	border-radius: 5px;
+	margin: 20px 10px;
+	padding: 10px 15px;
+	width: 90%;
+	color: white;
+	font-weight: bold;
+	cursor: pointer;
+	font-size: 16px;
+	font-family: "DM Mono", monospace;
+}
+.upload {
+	display: none;
+}
+select {
+	margin: 20px 10px;
+	padding: 10px 15px;
+	width: 90%;
+	border: 2px solid var(--dark);
+	border-radius: 5px;
+	background-color: var(--foreground);
+	color: var(--dark);
+	font-weight: bold;
+	font-size: 16px;
+	font-family: "DM Mono", monospace;
+}
+option {
+	background-color: var(--foreground);
+	color: var(--dark);
+	font-weight: bold;
+	font-size: 16px;
+	font-family: "DM Mono", monospace;
+}
+input[type="number"] {
+	border: 2px solid var(--dark);
+	margin: 20px 10px;
+	padding: 10px 15px;
+	width: 90%;
+	background-color: var(--foreground);
+	color: var(--dark);
+	font-weight: bold;
+	font-size: 16px;
+	font-family: "DM Mono", monospace;
+}

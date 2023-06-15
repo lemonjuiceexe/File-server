@@ -1,42 +1,33 @@
 <aside class="sidebar">
     <a href="/tree/{{parentDirectory}}">Go back</a>
-    <button onclick="toggleFilterMenu()">Filters</button>
-    <div class="filters-wrapper collapsed">
+    <fieldset>
+    <button class="filter-collapse-button"
+            onclick="toggleFilterMenu()">Show filters</button>
+    <legend>Filters</legend>
+    <div class="filters-wrapper ">
         {{#each filters}}
-            <button class="filter" onclick="previewFilter('{{this}}')">{{this}}
+            <button class="filter" onclick="previewFilter('{{this}}')">
+                <span class="filter-description">{{this}}</span>
                 <img class="filter-img" src="{{@root/imagePath}}" alt="{{@root/imagePath}}" style="{{cssFromFilter this}}">
             </button>
         {{/each}}
     </div>
+    </fieldset>
 </aside>
-
-<style>
-    .filter-img{
-        max-width: 200px;
-        max-height: 200px;
-    }
-    .filters-wrapper{
-        overflow: hidden;
-        min-height: fit-content;
-        height: 500px;
-        transition: all 500ms ease;
-        overflow-y: scroll;
-    }
-    .filters-wrapper.collapsed{
-        height: 0;
-    }
-</style>
 
 <script>
     let filterMenuCollapsed = true;
 	function toggleFilterMenu() {
-        const filtersWrapper = document.querySelector('.filters-wrapper');
+        const filtersWrapper = document.querySelector(".filters-wrapper");
+		const toggleButton = document.querySelector(".filter-collapse-button");
         if(filterMenuCollapsed){
             filtersWrapper.classList.remove('collapsed');
             filterMenuCollapsed = false;
+			toggleButton.innerText = "Hide filters";
         } else {
             filtersWrapper.classList.add('collapsed');
             filterMenuCollapsed = true;
+			toggleButton.innerText = "Show filters";
         }
     }
 </script>
