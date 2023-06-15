@@ -8,7 +8,6 @@ async function connectToDatabase(databaseName: string): Promise<Db | null> {
 	try {
 		const client: MongoClient = new MongoClient("mongodb://localhost:27017/");
 		await client.connect();
-		console.log("🧭 Connected to database: " + databaseName);
 		return client.db(databaseName);
 	} catch (error) {
 		console.log("🚨 Failed to connect to database: " + databaseName);
@@ -19,7 +18,7 @@ async function connectToDatabase(databaseName: string): Promise<Db | null> {
 async function selectCollection(db: Db, collectionName: string): Promise<Collection | null> {
 	try {
 		const collection: Collection = db.collection(collectionName);
-		console.log("🧭 Selected collection: " + collectionName);
+		console.log("🧭 Connected to collection: " + collectionName);
 		return collection;
 	} catch (error) {
 		console.log("🚨 Failed to select collection: " + collectionName);
