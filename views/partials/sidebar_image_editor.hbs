@@ -1,7 +1,7 @@
 <aside class="sidebar">
     <a href="/tree/{{parentDirectory}}">Go back</a>
-    <button>Filters</button>
-    <div class="filters-wrapper">
+    <button onclick="toggleFilterMenu()">Filters</button>
+    <div class="filters-wrapper collapsed">
         {{#each filters}}
             <button class="filter" onclick="previewFilter('{{this}}')">{{this}}
                 <img class="filter-img" src="{{@root/imagePath}}" alt="{{@root/imagePath}}" style="{{cssFromFilter this}}">
@@ -15,4 +15,28 @@
         max-width: 200px;
         max-height: 200px;
     }
+    .filters-wrapper{
+        overflow: hidden;
+        min-height: fit-content;
+        height: 500px;
+        transition: all 500ms ease;
+        overflow-y: scroll;
+    }
+    .filters-wrapper.collapsed{
+        height: 0;
+    }
 </style>
+
+<script>
+    let filterMenuCollapsed = true;
+	function toggleFilterMenu() {
+        const filtersWrapper = document.querySelector('.filters-wrapper');
+        if(filterMenuCollapsed){
+            filtersWrapper.classList.remove('collapsed');
+            filterMenuCollapsed = false;
+        } else {
+            filtersWrapper.classList.add('collapsed');
+            filterMenuCollapsed = true;
+        }
+    }
+</script>

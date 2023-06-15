@@ -1,13 +1,13 @@
-import express, {Request, Response, Router} from "express";
+import express, { Request, Response, Router } from "express";
 import * as filesystem from "fs";
 import * as filesystemPromises from "fs/promises";
 import path from "path";
 
-import {IFiles, ITextEditorPreferences} from "../types";
-import {UPLOAD_DIR, RESPONSE_CODES, IMAGE_FILTERS, currentPath, setCurrentPath, validatePath} from "../server";
-import {resourceExists, isFolder} from "./create_rename_delete";
-import {isTextFile} from "./update_file";
-import {getUsersTextEditorPreferences} from "../database";
+import { IFiles, ITextEditorPreferences } from "../types";
+import { UPLOAD_DIR, RESPONSE_CODES, IMAGE_FILTERS, currentPath, setCurrentPath, validatePath } from "../server";
+import { resourceExists, isFolder } from "./create_rename_delete";
+import { isTextFile } from "./update_file";
+import { getUsersTextEditorPreferences } from "../database";
 import * as colorThemes from "../color_themes.json";
 // const colorThemes = cth;
 

@@ -1,7 +1,7 @@
 {{>header}}
 {{>sidebar_image_editor}}
 <div class="image-editor-wrapper">
-    <p>Lorem ipsum dolor sit amet.</p>
+    <p>{{filePath}}</p>
     <img src="{{imagePath}}" alt="{{imagePath}}" class="image-editor">
     <button onclick="filter()">Save</button>
     <a href="{{imagePath}}" target="_blank">Preview image</a>
@@ -15,7 +15,7 @@
 </style>
 
 <script>
-    let selectedFilter = 'none';
+	let filtersMenuCollapsed = true;
     function previewFilter(filterName){
 		document.querySelector('.image-editor').style = cssFromFilter(filterName);
         selectedFilter = filterName;
