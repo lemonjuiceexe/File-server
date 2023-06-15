@@ -4,7 +4,7 @@ import * as crypto from "crypto-js";
 import { createFolder } from "./create_rename_delete";
 import { addUser, authenticateUser } from "../database";
 import { generateSessionToken, deleteUserSessionTokens, TOKEN_LIFETIME } from "../auth";
-import {RESPONSE_CODES} from "../server";
+import { RESPONSE_CODES } from "../server";
 
 const router: Router = express.Router();
 
@@ -37,7 +37,6 @@ router.get("/logout", (req: Request, res: Response): void => {
 
 // Auth
 router.post("/register", async (req: Request, res: Response): Promise<void> => {
-	//TODO: Make sure that username is valid, as the folder name will be the same
 	const login: string = req.body.username;
 	const password: string = crypto.SHA256(req.body.password).toString();
 	const responseCode: number = await addUser(login, password);

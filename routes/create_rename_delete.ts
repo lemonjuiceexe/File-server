@@ -23,7 +23,7 @@ export function isFolder(resourcePath: string): Promise<boolean> {
 		.then(stats => stats.isDirectory())
 		.catch(() => false);
 }
-function nameIsValid(name: string): boolean {
+export function isNameValid(name: string): boolean {
 	//TODO: Work on allowing %, maybe # too
 	const illegalCharacters: string[] = ["/", "\\", ":", "*", "?", '"', "<", ">", "|", "..", "#", "%"];
 	for (const character of illegalCharacters) {
@@ -150,7 +150,7 @@ async function renameResource(oldPath: string, newName: string): Promise<number>
 
 // ----Routes----
 router.post("/createResource", async (req: Request, res: Response): Promise<void> => {
-	if (!nameIsValid(req.body.resourceName)) {
+	if (!isNameValid(req.body.resourceName)) {
 		res.redirect(`/tree/${currentPath}?responseCode=${RESPONSE_CODES.INVALID_NAME}`);
 		return;
 	}
@@ -166,7 +166,7 @@ router.post("/createResource", async (req: Request, res: Response): Promise<void
 	res.redirect(`/tree/${currentPath}?responseCode=${responseCode}`);
 });
 router.post("/renameResource", async (req: Request, res: Response): Promise<void> => {
-	if (!nameIsValid(req.body.newName) || !nameIsValid(req.body.oldName)) {
+	if (!isNameValid(req.body.newName) || !isNameValid(req.body.oldName)) {
 		res.redirect(`/tree/${currentPath}?responseCode=${RESPONSE_CODES.INVALID_NAME}`);
 		return;
 	}
@@ -180,7 +180,7 @@ router.post("/renameResource", async (req: Request, res: Response): Promise<void
 	res.redirect(`/tree/${currentPath}?responseCode=${responseCode}`);
 });
 router.post("/deleteResource", async (req: Request, res: Response): Promise<void> => {
-	if (!nameIsValid(req.body.resourceName)) {
+	if (!isNameValid(req.body.resourceName)) {
 		res.redirect(`/tree/${currentPath}?responseCode=${RESPONSE_CODES.INVALID_NAME}`);
 		return;
 	}
