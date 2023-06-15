@@ -1,13 +1,14 @@
 import express, { Request, Response, Router } from "express";
 import * as filesystemPromises from "fs/promises";
 import path from "path";
+import Jimp from "jimp";
 
 import { UPLOAD_DIR, currentPath, RESPONSE_CODES, IMAGE_EXTENSIONS } from "../server";
 import { resourceExists } from "./create_rename_delete";
 
-const router: Router = express.Router();
+export const router: Router = express.Router();
 
-function isTextFile(filePath: string): boolean {
+export function isTextFile(filePath: string): boolean {
 	if (!resourceExists(filePath)) return false;
 	return !IMAGE_EXTENSIONS.includes(path.extname(filePath));
 }
@@ -28,6 +29,33 @@ async function updateTextFile(filePath: string, fileContent: string): Promise<nu
 	}
 }
 
+async function filterImage(imagePath: string, filterName: string): Promise<number>{
+	Jimp.read(path.join(UPLOAD_DIR, imagePath))
+		.then((image: Jimp) => {
+			switch(filterName){
+				case "blur":
+					image.blur(10);
+					break;
+				case "greyscale":
+					image.greyscale();
+					break;
+				case "sepia":
+					image.sepia();
+					break;
+				default:
+					return RESPONSE_CODES.ERROR;
+			}
+			image.write(path.join(UPLOAD_DIR, imagePath));
+		})
+		.catch(error => {
+			console.log("🚨 Failed to filter image: " + imagePath);
+			console.log("Reason: " + error);
+		});
+	console.log("🖼️ Filtered image: " + imagePath);
+	return RESPONSE_CODES.OK;
+}
+
+// Text files
 router.post("/updateFile", async (req: Request, res: Response): Promise<void> => {
 	const filePath: string = req.body.filePath;
 	const fileContent: string = req.body.fileContent;
@@ -40,4 +68,14 @@ router.post("/updateFile", async (req: Request, res: Response): Promise<void> =>
 	res.redirect(`/tree/${currentPath}?responseCode=${responseCode}`);
 });
 
-export default router;
+// Image filtering
+router.post("/filterImage", async (req: Request, res: Response): Promise<void> => {
+	const filter: string = req.body.filterName;
+	const responseCode: number = await filterImage(currentPath, filter);
+
+	if(responseCode === RESPONSE_CODES.OK){
+		res.redirect("/tree/" + currentPath);
+		return;
+	}
+	res.redirect(`/tree/${currentPath}?responseCode=${responseCode}`);
+});

@@ -37,7 +37,7 @@ body {
     font-weight: bold;
 }
 
-.filelist-wrapper, .text-editor-wrapper {
+.filelist-wrapper, .text-editor-wrapper, .image-editor-wrapper {
     grid-column: 2 / 3;
     grid-row: 2 / 3;
 }

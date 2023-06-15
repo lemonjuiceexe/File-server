@@ -1,12 +1,13 @@
-import express, { Request, Response, Router } from "express";
+import express, {Request, Response, Router} from "express";
 import * as filesystem from "fs";
 import * as filesystemPromises from "fs/promises";
 import path from "path";
 
 import {IFiles, ITextEditorPreferences} from "../types";
-import { UPLOAD_DIR, RESPONSE_CODES, currentPath, setCurrentPath, validatePath } from "../server";
-import { resourceExists, isFolder } from "./create_rename_delete";
-import { getUsersTextEditorPreferences } from "../database";
+import {UPLOAD_DIR, RESPONSE_CODES, IMAGE_FILTERS, currentPath, setCurrentPath, validatePath} from "../server";
+import {resourceExists, isFolder} from "./create_rename_delete";
+import {isTextFile} from "./update_file";
+import {getUsersTextEditorPreferences} from "../database";
 import * as colorThemes from "../color_themes.json";
 // const colorThemes = cth;
 
@@ -48,10 +49,10 @@ router.get("/tree((/:path)+)?", async (req: Request, res: Response): Promise<voi
 
 	// Generate a progressive path
 	// ex. for /tree/folder1/folder2, the progressive path is ["/", "/folder1", "/folder1/folder2"]
-	const splittedPath: string[] = currentPath.split("/").filter((el: string): boolean => el !== "");
+	const splitPath: string[] = currentPath.split("/").filter((el: string): boolean => el !== "");
 	let progressivePath: string[] = [];
-	for (let i: number = 0; i < splittedPath.length; i++) {
-		progressivePath.push("/" + splittedPath.slice(0, i + 1).join("/"));
+	for (let i: number = 0; i < splitPath.length; i++) {
+		progressivePath.push("/" + splitPath.slice(0, i + 1).join("/"));
 	}
 	progressivePath = progressivePath.map((el: string): string => el.replace("//", "/"));
 	if (!(await resourceExists(currentPath))) {
@@ -61,23 +62,34 @@ router.get("/tree((/:path)+)?", async (req: Request, res: Response): Promise<voi
 
 	// Handle files
 	if (!(await isFolder(currentPath))) {
-		// Read file content and render the text editor page
-		const fileContent: string = filesystem.readFileSync(path.join(UPLOAD_DIR, currentPath), "utf-8");
-		const userPreferences: ITextEditorPreferences | number = await getUsersTextEditorPreferences(username);
-		if (typeof userPreferences === "number") {
-			res.redirect(`/tree/${username}?responseCode=${userPreferences}`);
-			return;
+		// Text files
+		if (isTextFile(currentPath)) {
+			// Read file content and render the text editor page
+			const fileContent: string = filesystem.readFileSync(path.join(UPLOAD_DIR, currentPath), "utf-8");
+			const userPreferences: ITextEditorPreferences | number = await getUsersTextEditorPreferences(username);
+			if (typeof userPreferences === "number") {
+				res.redirect(`/tree/${username}?responseCode=${userPreferences}`);
+				return;
+			}
+			res.render("text_editor.hbs", {
+				filePath: currentPath,
+				fileContent: fileContent,
+				parentDirectory: path.dirname(currentPath),
+				username: username,
+				textSize: userPreferences.textSize,
+				textColor: userPreferences.textColor,
+				backgroundColor: userPreferences.backgroundColor,
+				colorThemesNames: Object.keys(colorThemes)
+			});
+		} else {
+			res.render("image_editor.hbs", {
+				filePath: currentPath,
+				parentDirectory: path.dirname(currentPath),
+				imagePath: `/${currentPath.slice(0, currentPath.length - 1)}`,
+				filters: IMAGE_FILTERS,
+				username: username
+			})
 		}
-		res.render("text_editor.hbs", {
-			filePath: currentPath,
-			fileContent: fileContent,
-			parentDirectory: path.dirname(currentPath),
-			username: username,
-			textSize: userPreferences.textSize,
-			textColor: userPreferences.textColor,
-			backgroundColor: userPreferences.backgroundColor,
-			colorThemesNames: Object.keys(colorThemes)
-		});
 		return;
 	}
 

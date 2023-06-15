@@ -10,7 +10,7 @@ import { router as authRouter } from "./auth";
 import mainRouter from "./routes/main";
 import { router as createDeleteRouter } from "./routes/create_rename_delete";
 import uploadRouter from "./routes/upload";
-import updateRouter from "./routes/update_file";
+import { router as updateRouter } from "./routes/update_file";
 import editPreferencesRouter from "./routes/edit_preferences";
 import registerLoginRouter from "./routes/login_register";
 
@@ -24,8 +24,8 @@ export const RESPONSE_CODES = {
 	OK: 200,
 	UNAUTHENTICATED: 401,
 	INVALID_CREDENTIALS: 401.1,
-	// In the HTTP standard, the 401 is defined as "Unauthorized", it, however, semantically means "Unauthenticated".
-	// The 403 "Forbidden" actually means "Unauthorized". And this is my own standard sooo 403 Unathorized.
+	// In the HTTP standard, the 401 is defined as "Unauthorised", it, however, semantically means "Unauthenticated".
+	// The 403 "Forbidden" actually means "Unauthorised". And this is my own standard sooo 403 Unauthorised.
 	UNAUTHORISED: 403,
 	NOT_FOUND: 404,
 	NOT_A_TEXT_FILE: 404.1,
@@ -35,6 +35,12 @@ export const RESPONSE_CODES = {
 	ERROR: 500
 };
 export const IMAGE_EXTENSIONS: string[] = [".png", ".jpg", ".jpeg", ".gif", ".bmp", ".svg"];
+export const IMAGE_FILTERS: string[] = [
+	"none",
+	"greyscale",
+	"sepia",
+	"blur"
+]
 
 export function setCurrentPath(value: string): void {
 	currentPath = value;
@@ -84,19 +90,36 @@ app.engine(
 					case RESPONSE_CODES.INVALID_NAME:
 						return "This name is not allowed. Please choose a new one.";
 					default:
-						return "Internal server error occured.";
+						return "Internal server error occurred.";
 				}
 			},
 			folderFromProgressivePath: (progressivePath: string): string => {
 				const pathArray: string[] = progressivePath.split("/");
 				return pathArray[pathArray.length - 1];
+			},
+			cssFromFilter: (filter: string): string => {
+				switch (filter) {
+					case "greyscale":
+						return "filter: grayscale(100%);";
+					case "sepia":
+						return "filter: sepia(100%);";
+					case "blur":
+						return "filter: blur(5px);";
+					case "none":
+						return "";
+					default:
+						return "";
+				}
 			}
 		}
 	}).engine
+
+
 );
 app.set("view engine", "hbs");
 app.set("views", "./views");
 app.use(express.static("public"));
+app.use(express.static("upload"));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser());

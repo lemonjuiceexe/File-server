@@ -1,5 +1,5 @@
 {{>header}}
-{{>text_editor_sidebar}}
+{{>sidebar_text_editor}}
 <div class="text-editor-wrapper">
     <div class="text-editor-header">
         <label for="editor">
@@ -8,7 +8,7 @@
     </div>
     <div class="line-numbers">
         <div class="line-number"></div>
-        <textarea id="editor" class="text-editor">{{fileContent}}</textarea>
+        <textarea id="editor" class="text-editor" wrap="off">{{fileContent}}</textarea>
     </div>
     <button onclick="saveFile()">Save changes</button>
 </div>
@@ -26,6 +26,7 @@
         height: 80%;
         margin: 0 30px 20px 30px;
         resize: none;
+        overflow-y: hidden;
         font-size: var(--font-size);
         background-color: var(--background-color);
         color: var(--text-color);
@@ -85,14 +86,14 @@
             keepalive: true,
             body: JSON.stringify(body)
         })
-                .then(response => {
-                    if (response.redirected) {
-                        window.location.href = response.url;
-                    } else {
-                        return response.json();
-                    }
-                })
-                .catch(error => console.log(error));
+            .then(response => {
+                if (response.redirected) {
+                    window.location.href = response.url;
+                } else {
+                    return response.json();
+                }
+            })
+            .catch(error => console.log(error));
     }
 
 </script>

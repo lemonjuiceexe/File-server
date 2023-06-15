@@ -1,0 +1,61 @@
+{{>header}}
+{{>sidebar_image_editor}}
+<div class="image-editor-wrapper">
+    <p>Lorem ipsum dolor sit amet.</p>
+    <img src="{{imagePath}}" alt="{{imagePath}}" class="image-editor">
+    <button onclick="filter()">Save</button>
+</div>
+
+<style>
+    @import url("/style/layout.css");
+    .image-editor{
+        max-width: 80%;
+    }
+</style>
+
+<script>
+    let selectedFilter = 'none';
+    function preview(filterName){
+		document.querySelector('.image-editor').style = cssFromFilter(filterName);
+        selectedFilter = filterName;
+    }
+
+    function filter(){
+        fetch("/filterImage", {
+			            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                filterName: selectedFilter,
+                imagePath: "{{imagePath}}"
+            })
+        })
+            .then(response => {
+                if (response.redirected) {
+                    window.location.href = response.url;
+                } else {
+                    return response.json();
+                }
+            })
+            .then(data => {
+                return data;
+            })
+            .catch(error => console.log(error));
+    }
+
+	function cssFromFilter(filter){
+        switch (filter) {
+            case "greyscale":
+                return "filter: grayscale(100%);";
+            case "sepia":
+                return "filter: sepia(100%);";
+            case "blur":
+                return "filter: blur(5px);";
+            case "none":
+                return "";
+            default:
+                return "";
+        }
+    }
+</script>
