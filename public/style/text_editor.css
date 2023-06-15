@@ -2,3 +2,41 @@
 @import url("./theme.css");
 @import url("./layout.css");
 @import url("./header_sidebar.css");
+
+textarea {
+	font-size: var(--font-size);
+	background-color: var(--background-color);
+	color: var(--text-color);
+	width: calc(100% - 40px);
+	height: 85%;
+	margin: 0 30px;
+	padding-left: 5px;
+	overflow-y: hidden;
+	resize: none;
+	border: none;
+	border-left: 2px solid var(--text-color);
+}
+textarea:focus {
+	outline: none;
+}
+.line-numbers {
+	position: relative;
+	background-color: var(--background-color);
+}
+.line-number {
+	display: block;
+	position: absolute;
+	left: 0;
+	height: var(--font-size);
+	width: 25px;
+	color: var(--text-color);
+	text-align: right;
+	border-radius: 50%;
+	margin-right: 10px;
+}
+.text-editor-wrapper .button-element {
+	width: 20vw;
+	position: relative;
+	left: 50%;
+	transform: translateX(-50%);
+}

@@ -30,6 +30,7 @@ fieldset {
 	width: 95%;
 	border: 2px solid var(--dark);
 	border-radius: 5px;
+	padding: 0 10px;
 }
 legend {
 	text-align: left;
@@ -65,6 +66,7 @@ input[type="number"].button-element {
 	color: black;
 	border: none;
 	outline: 2px solid var(--dark);
+	width: 80%;
 }
 input[type="number"].button-element:focus,
 select.button-element:focus {

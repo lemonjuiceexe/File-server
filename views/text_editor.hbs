@@ -1,7 +1,7 @@
 {{>header}}
 {{>sidebar_text_editor}}
 <div class="text-editor-wrapper">
-    <div class="text-editor-header">
+    <div class="text-editor-header pathbar-wrapper">
         <label for="editor">
             {{filePath}}
         </label>
@@ -10,46 +10,17 @@
         <div class="line-number"></div>
         <textarea id="editor" class="text-editor" wrap="off">{{fileContent}}</textarea>
     </div>
-    <button onclick="saveFile()">Save changes</button>
+    <button onclick="saveFile()" class="button-element">Save changes</button>
 </div>
 
 <style>
     @import url("/style/text_editor.css");
+    .text-editor-wrapper {
+        --font-size: {{textSize}}px;
+        --background-color: {{backgroundColor}};
+        --text-color: {{textColor}};
+    }
 </style>
-
-<!--<style>-->
-<!--    @import url("/style/layout.css");-->
-<!--    .text-editor-wrapper {-->
-<!--        --font-size: {{textSize}}px;-->
-<!--        --background-color: {{backgroundColor}};-->
-<!--        --text-color: {{textColor}};-->
-<!--        font-size: var(--font-size);-->
-<!--    }-->
-<!--    textarea {-->
-<!--        width: calc(100% - 40px);-->
-<!--        height: 80%;-->
-<!--        margin: 0 30px 20px 30px;-->
-<!--        resize: none;-->
-<!--        overflow-y: hidden;-->
-<!--        font-size: var(--font-size);-->
-<!--        background-color: var(--background-color);-->
-<!--        color: var(--text-color);-->
-<!--    }-->
-<!--    .line-numbers {-->
-<!--        position: relative;-->
-<!--    }-->
-<!--    .line-number {-->
-<!--        display: block;-->
-<!--        position: absolute;-->
-<!--        left: 0;-->
-<!--        height: var(--font-size);-->
-<!--        width: 25px;-->
-<!--        text-align: right;-->
-<!--        color: black;-->
-<!--        border-radius: 50%;-->
-<!--        margin-right: 10px;-->
-<!--    }-->
-<!--</style>-->
 
 <script defer>
     window.onload = countLines;
