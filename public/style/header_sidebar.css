@@ -7,11 +7,29 @@
 	color: var(--accent);
 }
 a.gh-link {
-	color: var(--accent);
+}
+a.gh-link::after {
+	content: "";
+	display: block;
+	width: 0;
+	height: 2px;
+	background: var(--accent);
+	transition: width 0.3s;
+}
+a.gh-link:hover::after {
+	width: 100%;
 }
 .copyright {
 	display: block;
 	font-weight: normal;
+	color: var(--accent);
+}
+.logout {
+	letter-spacing: normal;
+	transition: all 300ms ease;
+}
+.logout:hover {
+	letter-spacing: 3px;
 }
 
 /* ---- SIDEBAR ---- */
@@ -53,6 +71,10 @@ legend {
 	font-size: 16px;
 	font-family: "DM Mono", monospace;
 	cursor: pointer;
+	transition: all 300ms ease;
+}
+.button-element:not(select):hover {
+	background-color: var(--accent);
 }
 a.button-element {
 	color: white;

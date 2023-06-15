@@ -1,4 +1,3 @@
-<h1>Hi!</h1>
 <h2>
     {{#if (eq action "register")}}
         Register
@@ -13,15 +12,18 @@
       action="/login"
     {{/if}}
 >
-    <div class="input-wrapper">
-        <label for="input-username">Username</label>
-        <input type="text" name="username" id="input-username" required/>
+    <div class="form-group class=alt-text">
+        <div class="input-wrapper">
+            <label for="input-username">Username</label>
+            <input type="text" name="username" id="input-username" required/>
+        </div>
+        <div class="input-wrapper">
+            <label for="input-password">Password</label>
+            <input type="password" name="password" id="input-password" required/>
+        </div>
     </div>
-    <div class="input-wrapper">
-        <label for="input-password">Password</label>
-        <input type="password" name="password" id="input-password" required/>
-    </div>
-    <button type="submit">
+
+    <button type="submit" class="button-element">
         {{#if (eq action "register")}}
             Register
         {{else}}
@@ -30,10 +32,14 @@
     </button>
 </form>
 {{#if (eq action "register")}}
-    <p>Already have an account? <a href="/login">Log in</a>.</p>
+    <p class="alt-text">Already have an account? <a href="/login">Log in</a>.</p>
 {{else}}
-    <p>Don't have an account yet? <a href="/register">Register</a>.</p>
+    <p class="alt-text">Don't have an account yet? <a href="/register">Register</a>.</p>
 {{/if}}
+
+<style>
+    @import url("/style/login_register.css");
+</style>
 
 <script>
         {{#if responseCode}}
