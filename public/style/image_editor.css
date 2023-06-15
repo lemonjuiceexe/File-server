@@ -7,9 +7,8 @@
 	overflow-x: hidden;
 	overflow-y: scroll;
 	min-height: fit-content;
-	height: 400px;
+	height: 350px;
 	padding: 0 10px;
-	/*max-width: 20vw;*/
 	transition: height 500ms ease;
 }
 filters-wrapper::-webkit-scrollbar {
@@ -18,10 +17,7 @@ filters-wrapper::-webkit-scrollbar {
 .filters-wrapper.collapsed {
 	height: 0;
 }
-.filter-collapse-button > span {
-	display: block;
-	transform: rotate(90deg);
-}
+
 .filter {
 	background-color: transparent;
 	border: none;

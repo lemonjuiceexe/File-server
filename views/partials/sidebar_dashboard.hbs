@@ -2,16 +2,16 @@
     <fieldset>
         <legend>Create</legend>
         <div class="create-resource-wrapper">
-            <button class="create-resource-button" onclick="openDialogHandler('folder')">New folder</button>
-            <button class="create-resource-button" onclick="openDialogHandler('file')">New file</button>
+            <button class="button-element" onclick="openDialogHandler('folder')">New folder</button>
+            <button class="button-element" onclick="openDialogHandler('file')">New file</button>
         </div>
     </fieldset>
     <fieldset>
         <legend>Upload files</legend>
         <form method="POST" action="/upload" enctype="multipart/form-data">
-            <label for="upload" class="upload-label">Upload files</label>
+            <label for="upload" class="button-element upload-label">Upload files</label>
             <input class="upload" id="upload" type="file" name="files" multiple>
-            <button type="submit" class="upload-submit">Submit files</button>
+            <button type="submit" class="button-element">Submit files</button>
         </form>
     </fieldset>
     <dialog id="create-dialog">
@@ -20,8 +20,8 @@
         </label>
         <input class="dialog-input" type="text" id="dialog-name-input">
         <div class="dialog-button-wrapper">
-            <button class="dialog-button" onclick="submitDialogHandler()" id="submit-dialog">Create</button>
-            <button class="dialog-button" onclick="cancelDialogHandler()">Cancel</button>
+            <button class="button-element" onclick="submitDialogHandler()" id="submit-dialog">Create</button>
+            <button class="button-element" onclick="cancelDialogHandler()">Cancel</button>
         </div>
     </dialog>
 </aside>

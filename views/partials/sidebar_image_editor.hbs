@@ -1,10 +1,10 @@
 <aside class="sidebar">
-    <a href="/tree/{{parentDirectory}}">Go back</a>
+    <a href="/tree/{{parentDirectory}}" class="button-element">Go back</a>
     <fieldset>
-    <button class="filter-collapse-button"
+    <button class="filter-collapse-button button-element"
             onclick="toggleFilterMenu()">Show filters</button>
     <legend>Filters</legend>
-    <div class="filters-wrapper ">
+    <div class="filters-wrapper collapsed">
         {{#each filters}}
             <button class="filter" onclick="previewFilter('{{this}}')">
                 <span class="filter-description">{{this}}</span>

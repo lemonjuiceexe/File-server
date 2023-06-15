@@ -19,7 +19,6 @@
 	flex-flow: column nowrap;
 	justify-content: center;
 	align-items: center;
-	/*padding-right: 3vw;*/
 }
 .sidebar > * {
 	margin: 30px 0;
@@ -37,50 +36,41 @@ legend {
 .form-group {
 	margin: 10px 0;
 }
-.create-resource-button,
-.upload-label,
-input[type="submit"],
-button {
-	display: block;
-	background-color: var(--dark);
-	border: none;
-	border-radius: 5px;
-	margin: 20px 10px;
+.button-element {
+	display: inline-block;
+	margin: 20px 0;
 	padding: 10px 15px;
 	width: 90%;
+	border: 2px solid var(--dark);
+	border-radius: 5px;
+	background-color: var(--dark);
 	color: white;
 	font-weight: bold;
-	cursor: pointer;
 	font-size: 16px;
 	font-family: "DM Mono", monospace;
+	cursor: pointer;
+}
+a.button-element {
+	color: white;
+}
+dialog .button-element {
+	width: 40%;
+}
+select.button-element,
+input[type="number"].button-element {
+	background-color: var(--foreground);
+	color: black;
+	border: none;
+	outline: 2px solid var(--dark);
+}
+input[type="number"].button-element:focus,
+select.button-element:focus {
+	outline: 2px solid var(--accent);
 }
 .upload {
 	display: none;
 }
-select {
-	margin: 20px 10px;
-	padding: 10px 15px;
-	width: 90%;
-	border: 2px solid var(--dark);
-	border-radius: 5px;
-	background-color: var(--foreground);
-	color: var(--dark);
-	font-weight: bold;
-	font-size: 16px;
-	font-family: "DM Mono", monospace;
-}
 option {
-	background-color: var(--foreground);
-	color: var(--dark);
-	font-weight: bold;
-	font-size: 16px;
-	font-family: "DM Mono", monospace;
-}
-input[type="number"] {
-	border: 2px solid var(--dark);
-	margin: 20px 10px;
-	padding: 10px 15px;
-	width: 90%;
 	background-color: var(--foreground);
 	color: var(--dark);
 	font-weight: bold;
